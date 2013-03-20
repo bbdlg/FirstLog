@@ -15,13 +15,14 @@ import android.widget.Toast;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class RegActivity extends Activity {
 	private static final String activityTag = "RegActivity";
-	private final String mbApiKey = "5tyi3bBpNWPXZUZjpu7QacxP";//请替换申请客户端应用时获取的Api Key串
+	private final String mbApiKey = FirstLogHelper.mbApiKey;
 	private Button getAccessToken;//添加响应按钮
 	
     @Override
@@ -35,7 +36,7 @@ public class RegActivity extends Activity {
             public void onClick(View v) {
             BaiduOAuth BaiduOAuthoauthClient = new BaiduOAuth();
 
-            BaiduOAuthoauthClient.startOAuth(RegActivity.this, mbApiKey, new String[]{"basic"},new BaiduOAuth.OAuthListener() {
+            BaiduOAuthoauthClient.startOAuth(RegActivity.this, mbApiKey, new String[]{"basic", "netdisk"},new BaiduOAuth.OAuthListener() {
                     @Override
                     public void onException(String msg) {
                         Toast.makeText(getApplicationContext(), "授权失败 " + msg, Toast.LENGTH_SHORT).show();
@@ -44,8 +45,13 @@ public class RegActivity extends Activity {
                     public void onComplete(BaiduOAuthResponse response) {
                         if(null != response){
                             String accessToken = response.getAccessToken();
-                            Toast.makeText(getApplicationContext(), "Token: " + accessToken + "    User name:" + response.getUserName(), Toast.LENGTH_SHORT).show();
- 
+                            Toast.makeText(getApplicationContext(), "用户<"+response.getUserName()+">授权成功^_^", Toast.LENGTH_SHORT).show();
+                            
+                            //save in SharedPreferences
+                            Editor statusPreferences = getSharedPreferences("firstlog", 0).edit();
+            				statusPreferences.putString("token_of_"+response.getUserName(), accessToken);
+            				statusPreferences.commit();
+            				
             				//register in local database
             				String emailString = response.getUserName();
             				UserInfo userInfo = new UserInfo();

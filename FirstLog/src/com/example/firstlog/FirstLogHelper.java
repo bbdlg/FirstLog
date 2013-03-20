@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class FirstLogHelper extends Application {
+	public static final String mbApiKey = "5tyi3bBpNWPXZUZjpu7QacxP";//请替换申请客户端应用时获取的Api Key串
+	public static final String mbRootPath =  "/apps/FirstLog";
 	private Location location;
 	
 	public Location getLocation() {
@@ -125,5 +127,5 @@ public class FirstLogHelper extends Application {
 	  String time = format.format(date);
 	
 	  return time;
-}
+	}
 }

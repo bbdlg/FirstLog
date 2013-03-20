@@ -1,5 +1,8 @@
 package com.example.firstlog;
 
+import com.baidu.pcs.BaiduPCSActionInfo;
+import com.baidu.pcs.BaiduPCSClient;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -17,10 +21,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class GuideActivity extends Activity {
+	private String mbOauth = null;
+	private final static String mbRootPath =  FirstLogHelper.mbRootPath;
+	// the handler
+    private Handler mbUiThreadHandler = null;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,11 +186,57 @@ public class GuideActivity extends Activity {
             break;
             
         case Menu.FIRST + 2:	//sync data
+            SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+            String curuser = statusPreferences.getString("username", "noSuchEmailUser");
+            String token = statusPreferences.getString("token_of_"+curuser, "no_token");
+			if(token.equals("no_token")) {
+				Log.i("sync files", "token has not found");
+				//try to get new token
+				
+				//restore in SharedPreferences
+				
+			}
+			else {
+				Log.i("sync files", "token has found");
+				mbOauth = token;
+				syncFiles();
+			}
+			
+            
         	break;
 
         }
         
         return false;
+    }
+    
+    public void syncFiles() {
+    	if(null != mbOauth){
+
+    		Thread workThread = new Thread(new Runnable(){
+				public void run() {
+
+		    		BaiduPCSClient api = new BaiduPCSClient();
+		    		api.setAccessToken(mbOauth);
+		    		String path = mbRootPath;
+
+		    		final BaiduPCSActionInfo.PCSListInfoResponse ret = api.list(path, "name", "asc");
+		    		for(int i=0; (null != ret.list) && i<ret.list.size(); i++) {
+		    			Log.i("sync files", ret.list.get(i).path);
+		    		}
+    		
+		    		mbUiThreadHandler.post(new Runnable(){
+		    			public void run(){
+		    				Toast.makeText(getApplicationContext(), "List:  " + ret.status.errorCode + 
+		    						"    " + ret.status.message, Toast.LENGTH_SHORT).show();
+		    			}
+		    		});	
+		    		
+				}
+			});
+			 
+    		workThread.start();
+    	}
     }
     
     @Override
