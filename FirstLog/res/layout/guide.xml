@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="1" >
+     
+     </LinearLayout>
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="1" >
+
+         <LinearLayout
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_weight="1" >
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:gravity="center_vertical|right"
+              android:measureWithLargestChild="true" >
+
+          </LinearLayout>
+
+	<LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_weight="1"
+                 android:gravity="left|center_vertical"
+                 android:measureWithLargestChild="true" >
+
+		<Button
+		    android:id="@+id/starttext"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="5dp"
+		    android:text="@+string/guide_text" />
+
+             </LinearLayout>
+
+         </LinearLayout>
+
+     </LinearLayout>
+
+     
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="1" >
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:gravity="center_vertical|right"
+             android:measureWithLargestChild="true" >
+
+             <Button
+                 android:id="@+id/startaudio"
+                 android:layout_width="100dp"
+                 android:layout_height="wrap_content"
+                 android:layout_margin="10dp"
+                 android:text="@+string/guide_audio" />
+
+         </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:gravity="left|center_vertical"
+             android:measureWithLargestChild="true" >
+
+         </LinearLayout>
+         
+     </LinearLayout>
+
+     
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="1" >
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:gravity="center_vertical|right"
+             android:measureWithLargestChild="true" >
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_weight="1"
+                 android:gravity="center_vertical|right"
+                 android:measureWithLargestChild="true" >
+
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_weight="1"
+                 android:gravity="left|center_vertical"
+                 android:measureWithLargestChild="true" >
+
+                 <Button
+                     android:id="@+id/startphoto"
+                     android:layout_width="100dp"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="10dp"
+                     android:text="@+string/guide_photo" />
+
+             </LinearLayout>
+
+         </LinearLayout>
+         
+     </LinearLayout>
+
+     
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="1" >
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:gravity="center_vertical|right"
+             android:measureWithLargestChild="true" >
+
+             <Button
+                 android:id="@+id/startvideo"
+                 android:layout_width="100dp"
+                 android:layout_height="wrap_content"
+                 android:layout_margin="10dp"
+                 android:text="@+string/guide_video" />
+
+         </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:gravity="left|center_vertical"
+             android:measureWithLargestChild="true" >
+
+         </LinearLayout>
+         
+     </LinearLayout>
+
+     
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="1" >
+         
+     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:gravity="center"
+                         android:measureWithLargestChild="true" >
+
+                         <Button
+                             android:id="@+id/showlog"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_margin="10dp"
+                             android:text="@+string/guide_showlog" />
+
+                     </LinearLayout>
+                 </LinearLayout></LinearLayout>
+
+
+</LinearLayout>
