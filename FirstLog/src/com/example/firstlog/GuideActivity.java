@@ -75,8 +75,16 @@ public class GuideActivity extends Activity {
         }
 
         //get last known location
-        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(null == location) {
+        	Log.i("Location", "can't get location by gps, now via network");
+        	location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        if(null == location) {
+        	Log.i("Location", "can't get location by network, now set a default value");
+        	location = new Location(LocationManager.NETWORK_PROVIDER);
+        }
+        ((FirstLogHelper)getApplication()).setLocation(location);
         
         //start text
         Button textButton = (Button)findViewById(R.id.starttext);

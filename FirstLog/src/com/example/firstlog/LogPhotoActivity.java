@@ -85,6 +85,10 @@ public class LogPhotoActivity extends Activity {
 				String yearAndMonth = ((FirstLogHelper)getApplication()).getYearAndMonth();
 				String time = ((FirstLogHelper)getApplication()).getTime();
 				File newfile = new File(saveDir+"/"+yearAndMonth, ""+time+".jpg");
+				File savePath = new File(saveDir+"/"+yearAndMonth);
+				if (!savePath.exists()) {
+					savePath.mkdirs();
+				}
 				file.renameTo(newfile);
 				
 		        //store in db
@@ -104,7 +108,7 @@ public class LogPhotoActivity extends Activity {
 				//show in current activity
 				BitmapFactory.Options option = new BitmapFactory.Options();
 				option.inSampleSize = 2;
-				photo = BitmapFactory.decodeFile(file.getPath(), option);
+				photo = BitmapFactory.decodeFile(newfile.getPath(), option);
 				iv_image.setImageBitmap(photo);
 			}
 		}
