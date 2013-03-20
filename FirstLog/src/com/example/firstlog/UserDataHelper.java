@@ -38,6 +38,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
 		values.put(UserData.MARK, data.getMark());
 		values.put(UserData.SORT, data.getSort());
     	values.put(UserData.CONTENT, data.getContent());
+    	values.put(UserData.COMMENT, data.getComment());
     	Long uid = dbUserData.insert(UserDataHelper.TABLE_NAME, UserData.ID, values);
     	Log.e("SaveUserData", uid+"");
     	return uid;
@@ -56,7 +57,8 @@ public class UserDataHelper extends SQLiteOpenHelper {
                 UserData.LATITUDE+" varchar,"+
                 UserData.MARK+" varchar,"+
                 UserData.SORT+" varchar,"+
-                UserData.CONTENT+" varchar"+
+                UserData.CONTENT+" varchar,"+
+                UserData.COMMENT+" varchar"+
                 ")"
                 );
 	}
@@ -102,6 +104,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
             data.setMark(cursor.getString(5));
             data.setSort(cursor.getString(6));
             data.setContent(cursor.getString(7));
+            data.setComment(cursor.getString(8));
             dataList.add(data);
             cursor.moveToNext();
         }

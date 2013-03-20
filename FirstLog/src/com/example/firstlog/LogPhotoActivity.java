@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -27,8 +28,9 @@ public class LogPhotoActivity extends Activity {
 
 	private File file;
 
-	private String saveDir = Environment.getExternalStorageDirectory()
-			.getPath() + "/temp_image";
+	public static final String SAVEDIR = Environment.getExternalStorageDirectory()
+			.getPath() + "/FirstLog";
+	private String saveDir = SAVEDIR;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,27 @@ public class LogPhotoActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1 && resultCode == RESULT_OK) {
 			if (file != null && file.exists()) {
+				//store in sdcard
+				String yearAndMonth = ((FirstLogHelper)getApplication()).getYearAndMonth();
+				String time = ((FirstLogHelper)getApplication()).getTime();
+				File newfile = new File(saveDir+"/"+yearAndMonth, ""+time+".jpg");
+				file.renameTo(newfile);
+				
+		        //store in db
+				SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+		        String email = statusPreferences.getString("username", "noSuchEmailUser");
+				UserData userdata = new UserData();
+				userdata.setEmail(email);
+				userdata.setTimesec(""+time);
+				userdata.setLongitude(""+((FirstLogHelper)getApplication()).getLocation().getLongitude());
+				userdata.setLatitude(""+((FirstLogHelper)getApplication()).getLocation().getLatitude());
+				userdata.setSort(UserData.PHOTO);
+				userdata.setContent(yearAndMonth+"/"+time+".jpg");
+				
+				UserDataHelper userDataHelper = new UserDataHelper(LogPhotoActivity.this);
+				userDataHelper.SaveUserData(userdata);
+				
+				//show in current activity
 				BitmapFactory.Options option = new BitmapFactory.Options();
 				option.inSampleSize = 2;
 				photo = BitmapFactory.decodeFile(file.getPath(), option);

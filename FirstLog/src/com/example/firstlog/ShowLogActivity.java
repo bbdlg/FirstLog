@@ -42,7 +42,7 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
     	for(int i=0; i<data.size(); i++) {
     		items.add(
     				"\n"+
-    				"时间:"+((FirstLogHelper)getApplication()).getDateTimeByMillisecond(data.get(i).getTimesec())+"\n"+
+    				"时间:"+data.get(i).getTimesec()+"\n"+
     				"内容:"+data.get(i).getContent()+
     				"\n");
     		Log.i("get user data", "start:"+searchLogOffset+", end:"+searchLogStep);

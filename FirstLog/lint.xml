@@ -5,4 +5,5 @@
     <issue id="NewApi">
         <ignore path="src\com\example\firstlog\LogTextActivity.java" />
     </issue>
+    <issue id="SimpleDateFormat" severity="ignore" />
 </lint>

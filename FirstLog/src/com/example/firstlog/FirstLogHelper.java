@@ -27,8 +27,26 @@ public class FirstLogHelper extends Application {
 		location = curLoc;
 	}
 	
-	public long getTime() {
-		return System.currentTimeMillis();
+	/*
+	 * @返回yyy-MM-dd HH:mm:ss
+	 */
+	public String getTime() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		String dateString = formatter.format(currentTime);
+		return dateString;
+		//return System.currentTimeMillis();
+	}
+	
+	/*
+	 * @返回yyy-MM
+	 */
+	public String getYearAndMonth() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+		String dateString = formatter.format(currentTime);
+		return dateString;
+		//return System.currentTimeMillis();
 	}
 	
     //获取屏幕方向

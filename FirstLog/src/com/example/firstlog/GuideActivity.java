@@ -141,8 +141,8 @@ public class GuideActivity extends Activity {
 		*
 		* 4、文本，菜单的显示文本
 		*/
-	   menu.add(Menu.NONE, Menu.FIRST + 1, 1, "换个账号").setIcon(
-	   android.R.drawable.ic_menu_delete);
+	   menu.add(Menu.NONE, Menu.FIRST + 1, 1, "换个账号Log First").setIcon(android.R.drawable.ic_menu_delete);
+	   menu.add(Menu.NONE, Menu.FIRST + 2, 2, "同步FirstLog到云端").setIcon(android.R.drawable.ic_menu_delete);
 
        return true;
     }
@@ -150,7 +150,7 @@ public class GuideActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case Menu.FIRST + 1:
+        case Menu.FIRST + 1:	//change user id
         	Editor status = getSharedPreferences("firstlog", 0).edit();
         	status.putString("haveLogined", "no");
         	status.commit();
@@ -168,8 +168,12 @@ public class GuideActivity extends Activity {
 			startActivity(intent);
 			GuideActivity.this.finish();
             break;
-        }
+            
+        case Menu.FIRST + 2:	//sync data
+        	break;
 
+        }
+        
         return false;
     }
     

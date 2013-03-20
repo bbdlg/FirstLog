@@ -28,6 +28,8 @@ public class LogTextActivity extends Activity {
 		        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "还没有写任何内容呢~~");
 		        	return;
 		        }
+		        
+		        //store in db
 				SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
 		        String email = statusPreferences.getString("username", "noSuchEmailUser");
 				UserData data = new UserData();
@@ -37,6 +39,7 @@ public class LogTextActivity extends Activity {
 				data.setLatitude(""+((FirstLogHelper)getApplication()).getLocation().getLatitude());
 				data.setSort(UserData.TEXT);
 				data.setContent(contentEditText.getText().toString());
+				data.setComment("");
 				
 				UserDataHelper userDataHelper = new UserDataHelper(LogTextActivity.this);
 				userDataHelper.SaveUserData(data);
