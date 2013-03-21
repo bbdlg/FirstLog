@@ -26,11 +26,13 @@ public class FirstLogHelper extends Application {
 	public static final String remoteRootPath =  "/apps/FirstLog";
 	public static final String localRootPath = Environment.getExternalStorageDirectory().getPath() + "/FirstLog";
 	public static List<String> uploadFileList = new ArrayList<String>();
+	public static boolean isSyncing = false;
+	public static List<String> dirListNeedRemoteMake = new ArrayList<String>();
 	public static List<String> downloadFileList = new ArrayList<String>();
 	public static String token = null; 
 	private Location location;	
 	//UI thread
-	public static Handler uiThreadHandler = null;
+	public static Handler uiThreadHandler = new Handler();
 	
 	public Location getLocation() {
 		return location;

@@ -28,7 +28,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class GuideActivity extends Activity {
-	private String mbOauth = null;
 	private final static String remoteRootPath =  FirstLogHelper.remoteRootPath;
 	private final static String localRootPath = FirstLogHelper.localRootPath;
 	// the handler
@@ -205,7 +204,7 @@ public class GuideActivity extends Activity {
 			}
 			else {
 				Log.i("sync files", "token has found");
-				mbOauth = token;
+				FirstLogHelper.token = token;
 				syncFiles();
 			}
 			
@@ -218,15 +217,19 @@ public class GuideActivity extends Activity {
     }
     
     public void syncFiles() {
-    	if(null != mbOauth){
+    	if(null != FirstLogHelper.token){
+    		if(true == FirstLogHelper.isSyncing) {
+    			Toast.makeText(this, "正在同步文件中，稍安勿躁~", Toast.LENGTH_LONG).show();
+    			return;
+    		}
 
     		Thread workThread = new Thread(new Runnable(){
 				public void run() {
 
 		    		BaiduPCSClient api = new BaiduPCSClient();
-		    		api.setAccessToken(mbOauth);
+		    		api.setAccessToken(FirstLogHelper.token);
 
-		    		final BaiduPCSActionInfo.PCSListInfoResponse ret = api.list(remoteRootPath, "name", "asc");
+		    		final BaiduPCSActionInfo.PCSListInfoResponse remoteRootFileList = api.list(remoteRootPath, "name", "asc");
 		    		
 		    		//upload
 					FileSyncHelper fileSyncHelper = new FileSyncHelper();
@@ -240,52 +243,88 @@ public class GuideActivity extends Activity {
 					}	
 					
 					Log.i("sync files", "localfilelist size = "+localFileList.size());
+					
+					//get dirListNeedRemoteMake
 		    		for(int i=0; i<localFileList.size(); i++) {
 		    			boolean noDirRemote = true;
 		    			Log.i("sync files", "now process "+localFileList.get(i));
 		    			String dirName = fileSyncHelper.getLastDirOfPath(localFileList.get(i));
 		    			Log.i("sync files", "isDir = <"+dirName+">");
-		    			if(0 != dirName.length()) {
+		    			if(0 == dirName.length()) {
+		    				String fileNameLocal = fileSyncHelper.getFileNameOfPath(localFileList.get(i));
+		    				Log.i("sync files", "get local file "+fileNameLocal);
+		    				fileSyncHelper.addUploadFileList(localFileList.get(i));
+		    			}
+		    			else {
 		    				Log.i("sync files", "get local dir "+dirName);
 		    				int j=0;
-		    				for(j=0; (null != ret.list) && j<ret.list.size() && ret.list.get(j).isDir; j++) {
-		    					String dirNameRemote = fileSyncHelper.getFileNameOfPath(ret.list.get(j).path);
-		    					if(ret.list.get(j).isDir && dirNameRemote.equals(dirName)) {
-			    					noDirRemote = false;
-			    					break;		    						
+		    				for(j=0; j<FirstLogHelper.dirListNeedRemoteMake.size(); j++) {
+		    					if(FirstLogHelper.dirListNeedRemoteMake.get(j).equals(dirName)) {
+		    						noDirRemote = false;
+		    						Log.w("sync files", "find <"+dirName+"> in FirstLogHelper.dirListNeedRemoteMake.get("+j+")");
+		    						break;
 		    					}
 		    				}
+		    				for(j=0; noDirRemote && (null != remoteRootFileList.list) && j<remoteRootFileList.list.size() && remoteRootFileList.list.get(j).isDir; j++) {
+		    					String dirNameRemote = fileSyncHelper.getFileNameOfPath(remoteRootFileList.list.get(j).path);
+		    					Log.w("sync files", "dirNameRemote:"+dirNameRemote+", dirNameLocal:"+dirName);
+		    					if(remoteRootFileList.list.get(j).isDir && dirNameRemote.equals(dirName)) {
+			    					noDirRemote = false;
+			    					Log.w("sync files", "find <"+dirName+"> in ret.list.get("+j+")");
+			    					break;
+		    					}
+		    				}
+		    				
 		    				if(noDirRemote) {
-		    					//upload local dir ...
-		    					Log.i("sync files", "start mkdir remote DIR<"+dirName+">");
-		    					
-		    					//mkdir remote
-		    					BaiduPCSClient api_mkdir = new BaiduPCSClient();
-		    					api_mkdir.setAccessToken(mbOauth);
-		    					final BaiduPCSActionInfo.PCSFileInfoResponse ret1 = api_mkdir.makeDir(remoteRootPath+"/"+dirName);
-		    					Log.i("sync files", "mkdir in remote <"+remoteRootPath+"/"+dirName+">");
+		    					//add to UploadFileList
+		    					fileSyncHelper.addDirListNeedRemoteMake(dirName);
+		    					/*
+		    					File dir = new File(localRootPath+"/"+dirName);
+		    					String subFiles[] = dir.list();
+		    					for(int m=0; m<subFiles.length; m++) {
+		    						fileSyncHelper.addUploadFileList(dirName+"/"+subFiles[m]);
+		    						Log.i("sync files", "add <"+dirName+"/"+subFiles[m]+"> to FirstLogHelper.uploadFileList");
+		    					}
+		    					*/
+		    				}
+		    				else {
+		    					Log.e("sync files", "remote has this dir<"+dirName+">");
 		    				}
 		    				
 		    			}
-		    			else {
-		    				String fileNameLocal = fileSyncHelper.getFileNameOfPath(localFileList.get(i));
-		    				Log.i("sync files", "get local file "+fileNameLocal);
+		    		}
+		    		
+
+					//mkdir remote
+		    		for(int i=0; i<FirstLogHelper.dirListNeedRemoteMake.size(); i++) {
+		    			fileSyncHelper.mkdir(GuideActivity.this, FirstLogHelper.dirListNeedRemoteMake.get(i));
+						Log.i("sync files", "mkdir in remote <"+remoteRootPath+"/"+FirstLogHelper.dirListNeedRemoteMake.get(i)+">");	
+		    		}
+		    		
+		    		//get uploadFileList
+		    		for (int i=0; i<localFileList.size(); i++) {
+		    			for(int j=0; (null != remoteRootFileList.list) && j<remoteRootFileList.list.size() && remoteRootFileList.list.get(j).isDir; j++) {
+		    				if(0 <= remoteRootFileList.list.get(j).path.indexOf(localFileList.get(i))) {
+		    					fileSyncHelper.addUploadFileList(localFileList.get(i));
+		    				}
 		    			}
 		    		}
 		    		
+		    		//print uploadFileList
 		    		for(int i=0; i<FirstLogHelper.uploadFileList.size(); i++) {
-		    			Log.i("sync files", "filelist<"+i+"> = "+FirstLogHelper.uploadFileList.get(i));
+		    			Log.i("sync files", "uploadFileList<"+i+"> = "+FirstLogHelper.uploadFileList.get(i));
 		    		}
 		    		
+		    		//start upload list
 					fileSyncHelper.upload(GuideActivity.this);
-		    		
-		    		
-		    		//todo filelist ...
-		    		
+					
+					//finish upload list
+					FirstLogHelper.isSyncing = false;
 				}
 			});
 			 
     		workThread.start();
+    		FirstLogHelper.isSyncing = true;
     	}
     }
     

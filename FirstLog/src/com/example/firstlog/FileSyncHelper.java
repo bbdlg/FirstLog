@@ -3,6 +3,7 @@ package com.example.firstlog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Application;
 import android.content.Context;
@@ -24,6 +25,14 @@ public class FileSyncHelper {
 	public boolean addUploadFileList(String file) {
 		
 		FirstLogHelper.uploadFileList.add(file);
+		
+		return true;
+	}
+	
+	public boolean addDirListNeedRemoteMake(String file) {
+		
+		FirstLogHelper.dirListNeedRemoteMake.add(file);
+		Log.e("haha", "add into dir list need remote make is "+file);
 		
 		return true;
 	}
@@ -62,7 +71,7 @@ public class FileSyncHelper {
 	
 	
 	public String getFileNameOfPath(String path) {
-		String temp[] = path.split("\\\\");   
+		String temp[] = path.split("/");   
 		Log.i("getFileNameOfPath", "temp.length = "+temp.length);
 		return temp[temp.length - 1];   
 	}
@@ -71,8 +80,8 @@ public class FileSyncHelper {
 		String temp[] = path.split("/");
 		Log.i("getLastDirOfPath", "path is "+path+", temp.length = "+temp.length);
 		if(temp.length > 1) {
-			String ret = "";
-			for(int i=0; i<temp.length-1; i++) {
+			String ret = temp[0];
+			for(int i=1; i<temp.length-1; i++) {
 				ret = ret+"/"+temp[i];
 			}
 			return ret;
@@ -80,60 +89,64 @@ public class FileSyncHelper {
 		return "";
 	}
 	
+	public int mkdir(final Context context, String remotePath) {
+		if(null != FirstLogHelper.token) {
+			BaiduPCSClient api_mkdir = new BaiduPCSClient();
+			api_mkdir.setAccessToken(FirstLogHelper.token);
+			final BaiduPCSActionInfo.PCSFileInfoResponse ret = api_mkdir.makeDir(FirstLogHelper.remoteRootPath+"/"+remotePath);
+			return ret.status.errorCode;
+		}
+		return -1;
+	}
+	
 	public boolean upload(final Context context) {
 		
-		for(int i=0; FirstLogHelper.uploadFileList.size()>0 && i<FirstLogHelper.uploadFileList.size(); i++) {
+		while(FirstLogHelper.uploadFileList.size() > 0) {
 			if(null != FirstLogHelper.token) {
 
-	    		Thread workThread = new Thread(new Runnable(){
-					
-	    			public void run() {
-										
-	    				BaiduPCSClient api = new BaiduPCSClient();
-			    		
-			    		//Set access_token for pcs api
-			    		api.setAccessToken(FirstLogHelper.token);
-			    		
-			    	    //Use pcs uploadFile API to uplaod files
-						final BaiduPCSActionInfo.PCSFileInfoResponse uploadResponse = api.uploadFile(
-								FirstLogHelper.localRootPath+FirstLogHelper.uploadFileList.get(0), 
-								FirstLogHelper.remoteRootPath+FirstLogHelper.uploadFileList.get(0),
-								new BaiduPCSStatusListener(){
+				Log.e("lock", "size = "+FirstLogHelper.uploadFileList.size());
+								
+				BaiduPCSClient api = new BaiduPCSClient();
+	    		
+	    		//Set access_token for pcs api
+	    		api.setAccessToken(FirstLogHelper.token);
 
-							@Override
-							public void onProgress(long bytes, long total) {
-								// TODO Auto-generated method stub		
-							}
-			    		});
-			    		
-						//The interface of the thread UI
-						FirstLogHelper.uiThreadHandler.post(new Runnable(){
-							
-			    			public void run(){
-			  
-			    				if(uploadResponse.status.errorCode == 0){
-			    					
-			    					Toast.makeText(context,"上传成功", Toast.LENGTH_SHORT).show();
-			    					
-			    					//Delete temp file
-			    					FirstLogHelper.uploadFileList.remove(0);
-			    					
-		    					    //Back to the content activity
-			    					back(context, GuideActivity.class);
-			    					
-			    				}else{
-			    					
-			    					Toast.makeText(context,"错误代码"+uploadResponse.status.errorCode, Toast.LENGTH_SHORT).show(); 
-			    				}
-			    				
-			    			}
-			    		});	
-			    		
+				Log.e("upload", "from:"+FirstLogHelper.localRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1)
+				+" to"+FirstLogHelper.remoteRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1));
+
+	    	    //Use pcs uploadFile API to uplaod files
+				final BaiduPCSActionInfo.PCSFileInfoResponse uploadResponse = api.uploadFile(
+						FirstLogHelper.localRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1), 
+						FirstLogHelper.remoteRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1),
+						new BaiduPCSStatusListener(){
+
+					@Override
+					public void onProgress(long bytes, long total) {
+						// TODO Auto-generated method stub		
 					}
-				});
-				 
-	    		workThread.start();
+	    		});
+				
+				Log.e("upload", "upload success:"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1));
+					    		
+				//The interface of the thread UI
+				FirstLogHelper.uiThreadHandler.post(new Runnable(){
+					
+	    			public void run(){
+	  
+	    				if(uploadResponse.status.errorCode == 0){
+	    					
+	    					Toast.makeText(context,"上传成功", Toast.LENGTH_SHORT).show();
+	    					
+	    				}else{
+	    					
+	    					Toast.makeText(context,"错误代码"+uploadResponse.status.errorCode, Toast.LENGTH_SHORT).show(); 
+	    				}
+	    				
+	    			}
+	    		});	
 			}
+	    		
+			FirstLogHelper.uploadFileList.remove(FirstLogHelper.uploadFileList.size()-1);				
 		}
 
 		
