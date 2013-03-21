@@ -28,9 +28,7 @@ public class LogPhotoActivity extends Activity {
 
 	private File file;
 
-	public static final String SAVEDIR = Environment.getExternalStorageDirectory()
-			.getPath() + "/FirstLog";
-	private String saveDir = SAVEDIR;
+	private String saveDir = FirstLogHelper.localRootPath;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

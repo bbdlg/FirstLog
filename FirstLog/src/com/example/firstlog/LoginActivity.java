@@ -88,6 +88,9 @@ public class LoginActivity extends Activity {
             if(position < 0) {
             	adapter.add(email);
             }
+            else {
+            	Log.i("spinner", ""+email+" has exist in spinner<"+position+">");
+            }
             position = adapter.getPosition(email);
             //将spinner定位到添加值的位置
             spinner.setSelection(position);  
@@ -103,11 +106,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.setClass(LoginActivity.this, RegActivity.class);
-				startActivity(intent);
-				LoginActivity.this.finish();
-				//startActivityForResult(intent, 1);
+				gotoRegActivity();
 			}
 		});
        	
@@ -148,6 +147,14 @@ public class LoginActivity extends Activity {
 			}
 		});
        	
+    }
+    
+    private void gotoRegActivity() {
+		Intent intent = new Intent();
+		intent.setClass(LoginActivity.this, RegActivity.class);
+		startActivity(intent);
+		LoginActivity.this.finish();
+		//startActivityForResult(intent, 1);
     }
 
 }

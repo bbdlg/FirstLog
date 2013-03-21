@@ -1,7 +1,10 @@
 package com.example.firstlog;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +14,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
+import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -18,8 +23,14 @@ import android.view.WindowManager;
 
 public class FirstLogHelper extends Application {
 	public static final String mbApiKey = "5tyi3bBpNWPXZUZjpu7QacxP";//请替换申请客户端应用时获取的Api Key串
-	public static final String mbRootPath =  "/apps/FirstLog";
-	private Location location;
+	public static final String remoteRootPath =  "/apps/FirstLog";
+	public static final String localRootPath = Environment.getExternalStorageDirectory().getPath() + "/FirstLog";
+	public static List<String> uploadFileList = new ArrayList<String>();
+	public static List<String> downloadFileList = new ArrayList<String>();
+	public static String token = null; 
+	private Location location;	
+	//UI thread
+	public static Handler uiThreadHandler = null;
 	
 	public Location getLocation() {
 		return location;
@@ -128,4 +139,7 @@ public class FirstLogHelper extends Application {
 	
 	  return time;
 	}
+
+
+	
 }

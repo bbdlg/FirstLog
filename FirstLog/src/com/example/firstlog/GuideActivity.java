@@ -1,8 +1,12 @@
 package com.example.firstlog;
 
+import java.io.File;
+import java.util.List;
+
 import com.baidu.pcs.BaiduPCSActionInfo;
 import com.baidu.pcs.BaiduPCSClient;
 
+import android.R.string;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +29,8 @@ import android.widget.Toast;
 
 public class GuideActivity extends Activity {
 	private String mbOauth = null;
-	private final static String mbRootPath =  FirstLogHelper.mbRootPath;
+	private final static String remoteRootPath =  FirstLogHelper.remoteRootPath;
+	private final static String localRootPath = FirstLogHelper.localRootPath;
 	// the handler
     private Handler mbUiThreadHandler = null;
 	
@@ -33,6 +38,8 @@ public class GuideActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.guide);
+        
+        mbUiThreadHandler = new Handler();
         
         //get location
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
@@ -218,19 +225,62 @@ public class GuideActivity extends Activity {
 
 		    		BaiduPCSClient api = new BaiduPCSClient();
 		    		api.setAccessToken(mbOauth);
-		    		String path = mbRootPath;
 
-		    		final BaiduPCSActionInfo.PCSListInfoResponse ret = api.list(path, "name", "asc");
-		    		for(int i=0; (null != ret.list) && i<ret.list.size(); i++) {
-		    			Log.i("sync files", ret.list.get(i).path);
-		    		}
-    		
-		    		mbUiThreadHandler.post(new Runnable(){
-		    			public void run(){
-		    				Toast.makeText(getApplicationContext(), "List:  " + ret.status.errorCode + 
-		    						"    " + ret.status.message, Toast.LENGTH_SHORT).show();
+		    		final BaiduPCSActionInfo.PCSListInfoResponse ret = api.list(remoteRootPath, "name", "asc");
+		    		
+		    		//upload
+					FileSyncHelper fileSyncHelper = new FileSyncHelper();
+		    		File localDir = new File(localRootPath);		
+		    		List<String> localFileList = null;
+					try {
+						localFileList = fileSyncHelper.showAllFiles(localDir);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+					
+					Log.i("sync files", "localfilelist size = "+localFileList.size());
+		    		for(int i=0; i<localFileList.size(); i++) {
+		    			boolean noDirRemote = true;
+		    			Log.i("sync files", "now process "+localFileList.get(i));
+		    			String dirName = fileSyncHelper.getLastDirOfPath(localFileList.get(i));
+		    			Log.i("sync files", "isDir = <"+dirName+">");
+		    			if(0 != dirName.length()) {
+		    				Log.i("sync files", "get local dir "+dirName);
+		    				int j=0;
+		    				for(j=0; (null != ret.list) && j<ret.list.size() && ret.list.get(j).isDir; j++) {
+		    					String dirNameRemote = fileSyncHelper.getFileNameOfPath(ret.list.get(j).path);
+		    					if(ret.list.get(j).isDir && dirNameRemote.equals(dirName)) {
+			    					noDirRemote = false;
+			    					break;		    						
+		    					}
+		    				}
+		    				if(noDirRemote) {
+		    					//upload local dir ...
+		    					Log.i("sync files", "start mkdir remote DIR<"+dirName+">");
+		    					
+		    					//mkdir remote
+		    					BaiduPCSClient api_mkdir = new BaiduPCSClient();
+		    					api_mkdir.setAccessToken(mbOauth);
+		    					final BaiduPCSActionInfo.PCSFileInfoResponse ret1 = api_mkdir.makeDir(remoteRootPath+"/"+dirName);
+		    					Log.i("sync files", "mkdir in remote <"+remoteRootPath+"/"+dirName+">");
+		    				}
+		    				
 		    			}
-		    		});	
+		    			else {
+		    				String fileNameLocal = fileSyncHelper.getFileNameOfPath(localFileList.get(i));
+		    				Log.i("sync files", "get local file "+fileNameLocal);
+		    			}
+		    		}
+		    		
+		    		for(int i=0; i<FirstLogHelper.uploadFileList.size(); i++) {
+		    			Log.i("sync files", "filelist<"+i+"> = "+FirstLogHelper.uploadFileList.get(i));
+		    		}
+		    		
+					fileSyncHelper.upload(GuideActivity.this);
+		    		
+		    		
+		    		//todo filelist ...
 		    		
 				}
 			});
