@@ -9,7 +9,7 @@ public class UserData {
 	public static final String MARK			= "mark";
 	public static final String SORT			= "sort";
 	public static final String CONTENT		= "content";
-	public static final String COMMENT		= "comment";
+	public static final String DELETE		= "delete";
 	
 	//sort
 	public static final String TEXT		= "text";

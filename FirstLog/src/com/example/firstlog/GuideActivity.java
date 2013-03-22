@@ -297,6 +297,10 @@ public class GuideActivity extends Activity {
 				FirstLogHelper.token = token;
 				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
 				fileSyncHelper.syncFiles();
+				//TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this);
+				//tableSyncHelper.createTable();
+				//tableSyncHelper.deleteTable();
+				//tableSyncHelper.syncTable();
 			}
 			
             
