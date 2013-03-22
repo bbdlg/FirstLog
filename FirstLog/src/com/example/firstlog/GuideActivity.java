@@ -1,5 +1,8 @@
 package com.example.firstlog;
 
+import java.io.File;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +12,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -21,6 +27,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class GuideActivity extends Activity {
+	
+	private File file;
+	private String saveDir = FirstLogHelper.localRootPath;
+	public static boolean startRecordAudio = false;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +111,57 @@ public class GuideActivity extends Activity {
 				startActivity(intent);
 			}
 		});      
+ 
+        //start audio
+        Button audioButton = (Button)findViewById(R.id.startaudio);
+        
+        audioButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(false == startRecordAudio) {
+					startRecordAudio = true;
+					Button button = (Button)findViewById(R.id.startaudio);
+					button.setText("说完啦");
+				}
+				else {
+					startRecordAudio = false;
+					Button button = (Button)findViewById(R.id.startaudio);
+					button.setText(R.string.guide_audio);
+				}
+				/*
+				String state = Environment.getExternalStorageState();
+				if (state.equals(Environment.MEDIA_MOUNTED)) {
+					file = new File(saveDir, "temp.mp3");
+					file.delete();
+					if (!file.exists()) {
+						try {
+							file.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+							Toast.makeText(GuideActivity.this, "音频文件创建失败了，是什么原因呢？",
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					//Intent intent = new Intent(
+					//		"android.media.action.AUDIO_CAPTURE");
+					//intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+					
+					Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+					intent.setType("audio/amr");
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+		            //intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+					startActivityForResult(intent, UserData.ENUM_AUDIO);
+				} else {
+					Toast.makeText(GuideActivity.this, "您老的sdcard坏了或者没插~",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				 */
+			}
+		}); 
         
         //start photo
         Button photoButton = (Button)findViewById(R.id.startphoto);
@@ -108,11 +170,66 @@ public class GuideActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.setClass(GuideActivity.this, LogPhotoActivity.class);
-				startActivity(intent);
+
+				String state = Environment.getExternalStorageState();
+				if (state.equals(Environment.MEDIA_MOUNTED)) {
+					file = new File(saveDir, "temp.jpg");
+					file.delete();
+					if (!file.exists()) {
+						try {
+							file.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+							Toast.makeText(GuideActivity.this, "照片文件创建失败了，是什么原因呢？",
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					Intent intent = new Intent(
+							"android.media.action.IMAGE_CAPTURE");
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+					startActivityForResult(intent, UserData.ENUM_PHOTO);
+				} else {
+					Toast.makeText(GuideActivity.this, "您老的sdcard坏了或者没插~",
+							Toast.LENGTH_SHORT).show();
+				}
+			
 			}
 		});   
+ 
+        //start video
+        Button videoButton = (Button)findViewById(R.id.startvideo);
+        videoButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+				String state = Environment.getExternalStorageState();
+				if (state.equals(Environment.MEDIA_MOUNTED)) {
+					file = new File(saveDir, "temp.mp4");
+					file.delete();
+					if (!file.exists()) {
+						try {
+							file.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+							Toast.makeText(GuideActivity.this, "录像文件创建失败了，是什么原因呢？",
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					Intent intent = new Intent(
+							"android.media.action.VIDEO_CAPTURE");
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+					startActivityForResult(intent, UserData.ENUM_VIDEO);
+				} else {
+					Toast.makeText(GuideActivity.this, "您老的sdcard坏了或者没插~",
+							Toast.LENGTH_SHORT).show();
+				}
+			
+			}
+		}); 
         
         //show log
         Button showlogButton = (Button)findViewById(R.id.showlog);
@@ -139,20 +256,9 @@ public class GuideActivity extends Activity {
 	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		/*
-		*
-		* add()方法的四个参数，依次是：
-		*
-		* 1、组别，如果不分组的话就写Menu.NONE,
-		*
-		* 2、Id，这个很重要，Android根据这个Id来确定不同的菜单
-		*
-		* 3、顺序，那个菜单现在在前面由这个参数的大小决定
-		*
-		* 4、文本，菜单的显示文本
-		*/
-	   menu.add(Menu.NONE, Menu.FIRST + 1, 1, "换个账号Log First").setIcon(android.R.drawable.ic_menu_delete);
-	   menu.add(Menu.NONE, Menu.FIRST + 2, 2, "同步FirstLog到云端").setIcon(android.R.drawable.ic_menu_delete);
+
+    	menu.add(Menu.NONE, Menu.FIRST + 1, 1, "换个账号Log First").setIcon(android.R.drawable.ic_menu_delete);
+    	menu.add(Menu.NONE, Menu.FIRST + 2, 2, "同步FirstLog到云端").setIcon(android.R.drawable.ic_menu_delete);
 
        return true;
     }
@@ -184,11 +290,7 @@ public class GuideActivity extends Activity {
             String curuser = statusPreferences.getString("username", "noSuchEmailUser");
             String token = statusPreferences.getString("token_of_"+curuser, "no_token");
 			if(token.equals("no_token")) {
-				Log.i("sync files", "token has not found");
-				//try to get new token
-				
-				//restore in SharedPreferences
-				
+				Log.e("sync files", "token has not found");				
 			}
 			else {
 				Log.i("sync files", "token has found");
@@ -205,20 +307,62 @@ public class GuideActivity extends Activity {
         return false;
     }
     
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(RESULT_OK != resultCode) {
+			Log.e("GuideActivity", "Other activity return error code:"+resultCode);
+			return;
+		}
 
-    @Override
-    public void onOptionsMenuClosed(Menu menu) {
-        //Toast.makeText(this, "选项菜单关闭了", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        //Toast.makeText(this,
-        //        "选项菜单显示之前onPrepareOptionsMenu方法会被调用，你可以用此方法来根据打当时的情况调整菜单",
-        //        Toast.LENGTH_LONG).show();
-
-        // 如果返回false，此方法就把用户点击menu的动作给消费了，onCreateOptionsMenu方法将不会被调用
-
-        return true;
-    }
+		String time = ((FirstLogHelper)getApplication()).getTime();
+		String name = ""+time;
+		String sort = "";
+				
+		switch(requestCode) {
+			case UserData.ENUM_AUDIO:
+				name += ".mp3";
+				sort = UserData.AUDIO;
+				break;
+	
+			case UserData.ENUM_PHOTO:
+				name += ".jpg";
+				sort = UserData.PHOTO;
+				break;
+				
+			case UserData.ENUM_VIDEO:
+				name += ".mp4";
+				sort = UserData.VIDEO;
+				break;
+		}
+		
+		if (file != null && file.exists()) {
+			//store in sdcard
+			String yearAndMonth = ((FirstLogHelper)getApplication()).getYearAndMonth();
+			File newfile = new File(saveDir+"/"+yearAndMonth, name);
+			File savePath = new File(saveDir+"/"+yearAndMonth);
+			if (!savePath.exists()) {
+				savePath.mkdirs();
+			}
+			file.renameTo(newfile);
+			file.delete();
+			
+	        //store in db
+			SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+	        String email = statusPreferences.getString("username", "noSuchEmailUser");
+			UserData userdata = new UserData();
+			userdata.setEmail(email);
+			userdata.setTimesec(""+time);
+			userdata.setLongitude(""+((FirstLogHelper)getApplication()).getLocation().getLongitude());
+			userdata.setLatitude(""+((FirstLogHelper)getApplication()).getLocation().getLatitude());
+			userdata.setSort(sort);
+			userdata.setContent(yearAndMonth+"/"+name);
+			
+			UserDataHelper userDataHelper = new UserDataHelper(GuideActivity.this);
+			userDataHelper.SaveUserData(userdata);
+		}
+	}
+	
 }

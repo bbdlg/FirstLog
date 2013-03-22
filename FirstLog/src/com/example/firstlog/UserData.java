@@ -1,21 +1,26 @@
 package com.example.firstlog;
 
 public class UserData {
-	public static final String ID="id";
-	public static final String EMAIL="email";
-	public static final String TIMESEC="timesec";
-	public static final String LONGITUDE="longitude";
-	public static final String LATITUDE="latitude";
-	public static final String MARK="mark";
-	public static final String SORT="sort";
-	public static final String CONTENT="content";
-	public static final String COMMENT="comment";
+	public static final String ID			= "id";
+	public static final String EMAIL		= "email";
+	public static final String TIMESEC		= "timesec";
+	public static final String LONGITUDE	= "longitude";
+	public static final String LATITUDE		= "latitude";
+	public static final String MARK			= "mark";
+	public static final String SORT			= "sort";
+	public static final String CONTENT		= "content";
+	public static final String COMMENT		= "comment";
 	
 	//sort
-	public static final String TEXT="text";
-	public static final String PHOTO="photo";
-	public static final String AUDIO="audio";
-	public static final String VIDEO="video";
+	public static final String TEXT		= "text";
+	public static final String PHOTO	= "photo";
+	public static final String AUDIO	= "audio";
+	public static final String VIDEO	= "video";
+	
+	public static final int ENUM_TEXT	= 1;
+	public static final int ENUM_PHOTO	= 2;
+	public static final int ENUM_AUDIO	= 3;
+	public static final int ENUM_VIDEO	= 4;
 	
 	private String email;
 	private String timesec;
