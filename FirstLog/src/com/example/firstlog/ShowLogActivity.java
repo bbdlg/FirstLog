@@ -16,10 +16,8 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 	private ArrayAdapter<String> mAdapter;
 	private ArrayList<String> items = new ArrayList<String>();
 	private Handler mHandler;
-	private int start = 0;
-    private int searchLogOffset = 0;
+	private int searchLogOffset = 0;
 	private static int searchLogStep = 5;
-	private static int refreshCnt = 0;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,6 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				start = ++refreshCnt;
 				items.clear();
 				geneItems();
 				// mAdapter.notifyDataSetChanged();

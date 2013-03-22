@@ -3,12 +3,8 @@ package com.example.firstlog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +14,13 @@ import com.baidu.pcs.BaiduPCSStatusListener;
 
 public class FileSyncHelper {
 
+	private List<String> 		localFileList 			= new ArrayList<String>();
+	private List<String> 		remoteFilelist 			= new ArrayList<String>();
+	public static List<String> 	uploadFileList 			= new ArrayList<String>();
+	public static boolean 		isSyncing 				= false;
+	public static List<String> 	dirListNeedRemoteMake 	= new ArrayList<String>();
+	public static List<String> 	downloadFileList 		= new ArrayList<String>();
+	
 	private final Context context;
 	public FileSyncHelper(final Context context) {
 		// TODO Auto-generated constructor stub
@@ -26,14 +29,14 @@ public class FileSyncHelper {
 
 	public boolean addUploadFileList(String file) {
 		
-		FirstLogHelper.uploadFileList.add(file);
+		uploadFileList.add(file);
 		
 		return true;
 	}
 	
 	public boolean addDirListNeedRemoteMake(String file) {
 		
-		FirstLogHelper.dirListNeedRemoteMake.add(file);
+		dirListNeedRemoteMake.add(file);
 		Log.e("haha", "add into dir list need remote make is "+file);
 		
 		return true;
@@ -101,34 +104,109 @@ public class FileSyncHelper {
 		return -1;
 	}
 	
-	public boolean upload() {
-		
-		while(FirstLogHelper.uploadFileList.size() > 0) {
+	public boolean download(List<String> downloadFileList) {
+
+		while(downloadFileList.size() > 0) {
 			if(null != FirstLogHelper.token) {
 
-				Log.e("lock", "size = "+FirstLogHelper.uploadFileList.size());
+				Log.e("lock", "size = "+downloadFileList.size());
 								
 				BaiduPCSClient api = new BaiduPCSClient();
 	    		
 	    		//Set access_token for pcs api
 	    		api.setAccessToken(FirstLogHelper.token);
 
-				Log.e("upload", "from:"+FirstLogHelper.localRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1)
-				+" to"+FirstLogHelper.remoteRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1));
-
+				Log.e("upload", "from:"+FirstLogHelper.remoteRootPath+"/"+downloadFileList.get(downloadFileList.size()-1)
+				+" to"+FirstLogHelper.localRootPath+"/"+downloadFileList.get(downloadFileList.size()-1));
+				
+				//if local dir not exist, create it.
+				File tmpFile = new File(FirstLogHelper.localRootPath+"/"+getLastDirOfPath(downloadFileList.get(downloadFileList.size()-1)));
+				if(!tmpFile.exists()) {
+					tmpFile.mkdir();
+					Log.w("download", "create dir:"+tmpFile.getAbsolutePath()+", also "+FirstLogHelper.localRootPath+"/"+getLastDirOfPath(downloadFileList.get(downloadFileList.size()-1)));
+				}
 	    	    //Use pcs uploadFile API to uplaod files
-				final BaiduPCSActionInfo.PCSFileInfoResponse uploadResponse = api.uploadFile(
-						FirstLogHelper.localRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1), 
-						FirstLogHelper.remoteRootPath+"/"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1),
+				final BaiduPCSActionInfo.PCSSimplefiedResponse downloadResponse = api.downloadFileFromStream(
+						FirstLogHelper.remoteRootPath+"/"+downloadFileList.get(downloadFileList.size()-1),
+						FirstLogHelper.localRootPath+"/"+downloadFileList.get(downloadFileList.size()-1), 
 						new BaiduPCSStatusListener(){
 
 					@Override
 					public void onProgress(long bytes, long total) {
 						// TODO Auto-generated method stub		
+						Log.w("sync files", "processed "+bytes*100/total+"%");
 					}
 	    		});
 				
-				Log.e("upload", "upload success:"+FirstLogHelper.uploadFileList.get(FirstLogHelper.uploadFileList.size()-1));
+				if(downloadResponse.errorCode == 0){
+					
+					Log.e("download", "下载成功");
+					
+				}else{
+					
+					Log.e("download","下载失败，错误代码"+downloadResponse.errorCode); 
+				}
+					    		
+				//The interface of the thread UI
+				FirstLogHelper.uiThreadHandler.post(new Runnable(){
+					
+	    			public void run(){
+	  
+	    				if(downloadResponse.errorCode == 0){
+	    					
+	    					Toast.makeText(context,"下载成功", Toast.LENGTH_SHORT).show();
+	    					
+	    				}else{
+	    					
+	    					Toast.makeText(context,"下载失败，错误代码："+downloadResponse.errorCode+"，错误信息："+downloadResponse.message, Toast.LENGTH_SHORT).show(); 
+	    				}
+	    				
+	    			}
+	    		});	
+			}
+	    		
+			downloadFileList.remove(downloadFileList.size()-1);				
+		}
+
+		
+		return false;
+	
+	}
+	
+	public boolean upload(List<String> uploadFileList) {
+		
+		while(uploadFileList.size() > 0) {
+			if(null != FirstLogHelper.token) {
+
+				Log.e("lock", "size = "+uploadFileList.size());
+								
+				BaiduPCSClient api = new BaiduPCSClient();
+	    		
+	    		//Set access_token for pcs api
+	    		api.setAccessToken(FirstLogHelper.token);
+
+				Log.e("upload", "from:"+FirstLogHelper.localRootPath+"/"+uploadFileList.get(uploadFileList.size()-1)
+				+" to"+FirstLogHelper.remoteRootPath+"/"+uploadFileList.get(uploadFileList.size()-1));
+
+	    	    //Use pcs uploadFile API to uplaod files
+				final BaiduPCSActionInfo.PCSFileInfoResponse uploadResponse = api.uploadFile(
+						FirstLogHelper.localRootPath+"/"+uploadFileList.get(uploadFileList.size()-1), 
+						FirstLogHelper.remoteRootPath+"/"+uploadFileList.get(uploadFileList.size()-1),
+						new BaiduPCSStatusListener(){
+
+					@Override
+					public void onProgress(long bytes, long total) {
+						// TODO Auto-generated method stub		
+						Log.w("sync files", "processed "+bytes*100/total+"%");
+					}
+	    		});
+				
+				if(uploadResponse.status.errorCode == 0){
+					Log.e("upload", "上传成功");
+				}else{
+					Log.e("upload","上传失败，错误代码："+uploadResponse.status.errorCode+"，错误信息："+uploadResponse.status.message); 
+				}
+				Log.e("upload", "upload success:"+uploadFileList.get(uploadFileList.size()-1));
 					    		
 				//The interface of the thread UI
 				FirstLogHelper.uiThreadHandler.post(new Runnable(){
@@ -141,14 +219,14 @@ public class FileSyncHelper {
 	    					
 	    				}else{
 	    					
-	    					Toast.makeText(context,"错误代码"+uploadResponse.status.errorCode, Toast.LENGTH_SHORT).show(); 
+	    					Toast.makeText(context,"上传失败，错误代码："+uploadResponse.status.errorCode+"，错误信息："+uploadResponse.status.message, Toast.LENGTH_SHORT).show(); 
 	    				}
 	    				
 	    			}
 	    		});	
 			}
 	    		
-			FirstLogHelper.uploadFileList.remove(FirstLogHelper.uploadFileList.size()-1);				
+			uploadFileList.remove(uploadFileList.size()-1);				
 		}
 
 		
@@ -164,112 +242,97 @@ public class FileSyncHelper {
     
     public void syncFiles() {
     	if(null != FirstLogHelper.token){
-    		if(true == FirstLogHelper.isSyncing) {
+    		if(true == isSyncing) {
     			Toast.makeText(context, "正在同步文件中，稍安勿躁~", Toast.LENGTH_LONG).show();
     			return;
     		}
 
     		Thread workThread = new Thread(new Runnable(){
 				public void run() {
+					
 
+					//get remote file list
 		    		BaiduPCSClient api = new BaiduPCSClient();
 		    		api.setAccessToken(FirstLogHelper.token);
-
 		    		final BaiduPCSActionInfo.PCSListInfoResponse remoteRootFileList = api.list(FirstLogHelper.remoteRootPath, "name", "asc");
+		    		for(int i=0; (null != remoteRootFileList.list)&&(i<remoteRootFileList.list.size()); i++) {
+		    			if(remoteRootFileList.list.get(i).isDir) {
+		    				final BaiduPCSActionInfo.PCSListInfoResponse remoteSecondFileList = api.list(remoteRootFileList.list.get(i).path, "name", "asc");
+		    				for(int j=0; (null != remoteSecondFileList.list)&&(j<remoteSecondFileList.list.size()); j++) {
+		    					if(remoteSecondFileList.list.get(j).isDir) {
+		    						Log.w("sync files", "there's lower dir in second dir:"+remoteSecondFileList.list.get(j).path);
+		    					}
+		    					else {
+		    						remoteFilelist.add(remoteSecondFileList.list.get(j).path.substring(FirstLogHelper.remoteRootPath.length()+1));
+		    					}
+		    				}
+		    			}
+		    			else {
+		    				remoteFilelist.add(remoteRootFileList.list.get(i).path.substring(FirstLogHelper.remoteRootPath.length()+1));
+		    			}
+		    		}
 		    		
-		    		//upload
-		    		File localDir = new File(FirstLogHelper.localRootPath);		
-		    		List<String> localFileList = null;
+		    		//get local file list
+		    		File localDir = new File(FirstLogHelper.localRootPath);	
 					try {
 						localFileList = showAllFiles(localDir);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}	
+					}
+										
+					//debug
+					String str = "localfilelist size = "+localFileList.size()+"\n";
+					for(int i=0; i<localFileList.size(); i++) {
+						str += (localFileList.get(i)+"\n");
+					}
+					str += ("remotefilelist size = "+remoteFilelist.size()+"\n");
+					for(int i=0; i<remoteFilelist.size(); i++) {
+						str += (remoteFilelist.get(i)+"\n");
+					}
+					Log.i("sync files", str);
 					
-					Log.i("sync files", "localfilelist size = "+localFileList.size());
+					//compare remoteFileList and localFileList
+					for(int i=localFileList.size()-1; i>=0; i--) {
+						String tmpLocalFile = localFileList.get(i);
+						boolean isExist = false;
+						for(int j=remoteFilelist.size()-1; j>=0; j--) {
+							if(0 <= remoteFilelist.get(j).indexOf(tmpLocalFile)) {
+								remoteFilelist.remove(j);
+								localFileList.remove(i);
+								isExist = true;
+								break;
+							}
+						}
+						if(false == isExist) {
+							uploadFileList.add(tmpLocalFile);
+							localFileList.remove(i);
+						}
+					}
+					downloadFileList.addAll(remoteFilelist);
 					
-					//get dirListNeedRemoteMake
-		    		for(int i=0; i<localFileList.size(); i++) {
-		    			boolean noDirRemote = true;
-		    			Log.i("sync files", "now process "+localFileList.get(i));
-		    			String dirName = getLastDirOfPath(localFileList.get(i));
-		    			Log.i("sync files", "isDir = <"+dirName+">");
-		    			if(0 == dirName.length()) {
-		    				String fileNameLocal = getFileNameOfPath(localFileList.get(i));
-		    				Log.i("sync files", "get local file "+fileNameLocal);
-		    				addUploadFileList(localFileList.get(i));
-		    			}
-		    			else {
-		    				Log.i("sync files", "get local dir "+dirName);
-		    				int j=0;
-		    				for(j=0; j<FirstLogHelper.dirListNeedRemoteMake.size(); j++) {
-		    					if(FirstLogHelper.dirListNeedRemoteMake.get(j).equals(dirName)) {
-		    						noDirRemote = false;
-		    						Log.w("sync files", "find <"+dirName+"> in FirstLogHelper.dirListNeedRemoteMake.get("+j+")");
-		    						break;
-		    					}
-		    				}
-		    				for(j=0; noDirRemote && (null != remoteRootFileList.list) && j<remoteRootFileList.list.size() && remoteRootFileList.list.get(j).isDir; j++) {
-		    					String dirNameRemote = getFileNameOfPath(remoteRootFileList.list.get(j).path);
-		    					Log.w("sync files", "dirNameRemote:"+dirNameRemote+", dirNameLocal:"+dirName);
-		    					if(remoteRootFileList.list.get(j).isDir && dirNameRemote.equals(dirName)) {
-			    					noDirRemote = false;
-			    					Log.w("sync files", "find <"+dirName+"> in ret.list.get("+j+")");
-			    					break;
-		    					}
-		    				}
-		    				
-		    				if(noDirRemote) {
-		    					//add to UploadFileList
-		    					addDirListNeedRemoteMake(dirName);
-		    					/*
-		    					File dir = new File(localRootPath+"/"+dirName);
-		    					String subFiles[] = dir.list();
-		    					for(int m=0; m<subFiles.length; m++) {
-		    						fileSyncHelper.addUploadFileList(dirName+"/"+subFiles[m]);
-		    						Log.i("sync files", "add <"+dirName+"/"+subFiles[m]+"> to FirstLogHelper.uploadFileList");
-		    					}
-		    					*/
-		    				}
-		    				else {
-		    					Log.e("sync files", "remote has this dir<"+dirName+">");
-		    				}
-		    				
-		    			}
-		    		}
-		    		
-
-					//mkdir remote
-		    		for(int i=0; i<FirstLogHelper.dirListNeedRemoteMake.size(); i++) {
-		    			mkdir(FirstLogHelper.dirListNeedRemoteMake.get(i));
-						Log.i("sync files", "mkdir in remote <"+FirstLogHelper.remoteRootPath+"/"+FirstLogHelper.dirListNeedRemoteMake.get(i)+">");	
-		    		}
-		    		
-		    		//get uploadFileList
-		    		for (int i=0; i<localFileList.size(); i++) {
-		    			for(int j=0; (null != remoteRootFileList.list) && j<remoteRootFileList.list.size() && remoteRootFileList.list.get(j).isDir; j++) {
-		    				if(0 <= remoteRootFileList.list.get(j).path.indexOf(localFileList.get(i))) {
-		    					addUploadFileList(localFileList.get(i));
-		    				}
-		    			}
-		    		}
-		    		
-		    		//print uploadFileList
-		    		for(int i=0; i<FirstLogHelper.uploadFileList.size(); i++) {
-		    			Log.i("sync files", "uploadFileList<"+i+"> = "+FirstLogHelper.uploadFileList.get(i));
-		    		}
+					//debug
+					str = "uploadFileList size = "+uploadFileList.size()+"\n";
+					for(int i=0; i<uploadFileList.size(); i++) {
+						str += (uploadFileList.get(i)+"\n");
+					}
+					str += ("downloadFileList size = "+downloadFileList.size()+"\n");
+					for(int i=0; i<downloadFileList.size(); i++) {
+						str += (downloadFileList.get(i)+"\n");
+					}
+					Log.i("sync files", str);
 		    		
 		    		//start upload list
-					upload();
+					upload(uploadFileList);
+					download(downloadFileList);
 					
 					//finish upload list
-					FirstLogHelper.isSyncing = false;
+					isSyncing = false;
 				}
 			});
 			 
     		workThread.start();
-    		FirstLogHelper.isSyncing = true;
+    		isSyncing = true;
     	}
     }
     

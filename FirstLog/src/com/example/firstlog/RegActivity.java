@@ -2,14 +2,10 @@ package com.example.firstlog;
 
 import com.baidu.oauth.BaiduOAuth;
 import com.baidu.oauth.BaiduOAuth.BaiduOAuthResponse;
-import com.baidu.oauth.BaiduOAuth.OAuthListener;
-
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import android.annotation.TargetApi;
@@ -93,55 +89,6 @@ public class RegActivity extends Activity {
                 });
             }
         });
-        
-        /*
-        Button reg = (Button)findViewById(R.id.reg_button);
-        reg.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.i(RegActivity.activityTag, "click reg button");
-				// TODO Auto-generated method stub
-				TextView tips = (TextView)findViewById(R.id.tips_textview);
-				tips.setText("");
-				
-				//register in local database
-				String emailString = "testEmail";
-				UserInfo userInfo = new UserInfo();
-				userInfo.setEmail(emailString);
-				Log.i(RegActivity.activityTag, "new DataHelper()");
-				DataHelper dataHelper = new DataHelper(RegActivity.this);
-				Log.i(RegActivity.activityTag, "finish new DataHelper()");
-				
-				Boolean retBoolean = dataHelper.HaveUserInfo(emailString);
-				Log.i(RegActivity.activityTag, "after HaveUserInfo()");
-				if(true == retBoolean) {
-					Log.i(RegActivity.activityTag, "email<"+emailString+"> has registered");
-					tips.setText("这个邮箱已经被注册过啦");
-					return;
-				}
-				else {
-					dataHelper.SaveUserInfo(userInfo);
-					Log.i(RegActivity.activityTag, "register email<"+emailString+">");
-				}
-				
-				retBoolean = dataHelper.HaveUserInfo(emailString);
-				if(false == retBoolean) {
-					Log.i(RegActivity.activityTag, "email<"+emailString+"> register failed!");
-					tips.setText("未知错误，请联系楼主:(");
-					return;
-				}
-				tips.setText("注册成功喽:)");
-				Log.i(RegActivity.activityTag, "email<"+emailString+"> register success!");
-				
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				bundle.putString("email", emailString);
-				intent.putExtras(bundle);
-				setResult(Activity.RESULT_OK, intent);
-				RegActivity.this.finish();
-			}
-		});
-		*/
+
     }
 }

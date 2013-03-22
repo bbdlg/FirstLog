@@ -21,15 +21,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class GuideActivity extends Activity {
-	// the handler
-    private Handler mbUiThreadHandler = null;
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.guide);
         
-        mbUiThreadHandler = new Handler();
+        new Handler();
         
         //get location
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);

@@ -23,8 +23,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 
 public class LoginActivity extends Activity {
-	private static final String activityTag = "LoginActivity";
-	//private static String[] m = null;
 	private static List<String> m = new ArrayList<String>();;
 	private EditText view ;
 	private Spinner spinner;
