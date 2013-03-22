@@ -1,12 +1,5 @@
 package com.example.firstlog;
 
-import java.io.File;
-import java.util.List;
-
-import com.baidu.pcs.BaiduPCSActionInfo;
-import com.baidu.pcs.BaiduPCSClient;
-
-import android.R.string;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,8 +21,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class GuideActivity extends Activity {
-	private final static String remoteRootPath =  FirstLogHelper.remoteRootPath;
-	private final static String localRootPath = FirstLogHelper.localRootPath;
 	// the handler
     private Handler mbUiThreadHandler = null;
 	
@@ -205,7 +196,8 @@ public class GuideActivity extends Activity {
 			else {
 				Log.i("sync files", "token has found");
 				FirstLogHelper.token = token;
-				syncFiles();
+				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
+				fileSyncHelper.syncFiles();
 			}
 			
             
@@ -216,118 +208,7 @@ public class GuideActivity extends Activity {
         return false;
     }
     
-    public void syncFiles() {
-    	if(null != FirstLogHelper.token){
-    		if(true == FirstLogHelper.isSyncing) {
-    			Toast.makeText(this, "正在同步文件中，稍安勿躁~", Toast.LENGTH_LONG).show();
-    			return;
-    		}
 
-    		Thread workThread = new Thread(new Runnable(){
-				public void run() {
-
-		    		BaiduPCSClient api = new BaiduPCSClient();
-		    		api.setAccessToken(FirstLogHelper.token);
-
-		    		final BaiduPCSActionInfo.PCSListInfoResponse remoteRootFileList = api.list(remoteRootPath, "name", "asc");
-		    		
-		    		//upload
-					FileSyncHelper fileSyncHelper = new FileSyncHelper();
-		    		File localDir = new File(localRootPath);		
-		    		List<String> localFileList = null;
-					try {
-						localFileList = fileSyncHelper.showAllFiles(localDir);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}	
-					
-					Log.i("sync files", "localfilelist size = "+localFileList.size());
-					
-					//get dirListNeedRemoteMake
-		    		for(int i=0; i<localFileList.size(); i++) {
-		    			boolean noDirRemote = true;
-		    			Log.i("sync files", "now process "+localFileList.get(i));
-		    			String dirName = fileSyncHelper.getLastDirOfPath(localFileList.get(i));
-		    			Log.i("sync files", "isDir = <"+dirName+">");
-		    			if(0 == dirName.length()) {
-		    				String fileNameLocal = fileSyncHelper.getFileNameOfPath(localFileList.get(i));
-		    				Log.i("sync files", "get local file "+fileNameLocal);
-		    				fileSyncHelper.addUploadFileList(localFileList.get(i));
-		    			}
-		    			else {
-		    				Log.i("sync files", "get local dir "+dirName);
-		    				int j=0;
-		    				for(j=0; j<FirstLogHelper.dirListNeedRemoteMake.size(); j++) {
-		    					if(FirstLogHelper.dirListNeedRemoteMake.get(j).equals(dirName)) {
-		    						noDirRemote = false;
-		    						Log.w("sync files", "find <"+dirName+"> in FirstLogHelper.dirListNeedRemoteMake.get("+j+")");
-		    						break;
-		    					}
-		    				}
-		    				for(j=0; noDirRemote && (null != remoteRootFileList.list) && j<remoteRootFileList.list.size() && remoteRootFileList.list.get(j).isDir; j++) {
-		    					String dirNameRemote = fileSyncHelper.getFileNameOfPath(remoteRootFileList.list.get(j).path);
-		    					Log.w("sync files", "dirNameRemote:"+dirNameRemote+", dirNameLocal:"+dirName);
-		    					if(remoteRootFileList.list.get(j).isDir && dirNameRemote.equals(dirName)) {
-			    					noDirRemote = false;
-			    					Log.w("sync files", "find <"+dirName+"> in ret.list.get("+j+")");
-			    					break;
-		    					}
-		    				}
-		    				
-		    				if(noDirRemote) {
-		    					//add to UploadFileList
-		    					fileSyncHelper.addDirListNeedRemoteMake(dirName);
-		    					/*
-		    					File dir = new File(localRootPath+"/"+dirName);
-		    					String subFiles[] = dir.list();
-		    					for(int m=0; m<subFiles.length; m++) {
-		    						fileSyncHelper.addUploadFileList(dirName+"/"+subFiles[m]);
-		    						Log.i("sync files", "add <"+dirName+"/"+subFiles[m]+"> to FirstLogHelper.uploadFileList");
-		    					}
-		    					*/
-		    				}
-		    				else {
-		    					Log.e("sync files", "remote has this dir<"+dirName+">");
-		    				}
-		    				
-		    			}
-		    		}
-		    		
-
-					//mkdir remote
-		    		for(int i=0; i<FirstLogHelper.dirListNeedRemoteMake.size(); i++) {
-		    			fileSyncHelper.mkdir(GuideActivity.this, FirstLogHelper.dirListNeedRemoteMake.get(i));
-						Log.i("sync files", "mkdir in remote <"+remoteRootPath+"/"+FirstLogHelper.dirListNeedRemoteMake.get(i)+">");	
-		    		}
-		    		
-		    		//get uploadFileList
-		    		for (int i=0; i<localFileList.size(); i++) {
-		    			for(int j=0; (null != remoteRootFileList.list) && j<remoteRootFileList.list.size() && remoteRootFileList.list.get(j).isDir; j++) {
-		    				if(0 <= remoteRootFileList.list.get(j).path.indexOf(localFileList.get(i))) {
-		    					fileSyncHelper.addUploadFileList(localFileList.get(i));
-		    				}
-		    			}
-		    		}
-		    		
-		    		//print uploadFileList
-		    		for(int i=0; i<FirstLogHelper.uploadFileList.size(); i++) {
-		    			Log.i("sync files", "uploadFileList<"+i+"> = "+FirstLogHelper.uploadFileList.get(i));
-		    		}
-		    		
-		    		//start upload list
-					fileSyncHelper.upload(GuideActivity.this);
-					
-					//finish upload list
-					FirstLogHelper.isSyncing = false;
-				}
-			});
-			 
-    		workThread.start();
-    		FirstLogHelper.isSyncing = true;
-    	}
-    }
-    
     @Override
     public void onOptionsMenuClosed(Menu menu) {
         //Toast.makeText(this, "选项菜单关闭了", Toast.LENGTH_LONG).show();
