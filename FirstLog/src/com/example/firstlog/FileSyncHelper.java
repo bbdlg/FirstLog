@@ -243,7 +243,7 @@ public class FileSyncHelper {
     public void syncFiles() {
     	if(null != FirstLogHelper.token){
     		if(true == isSyncing) {
-    			Toast.makeText(context, "正在同步文件中，稍安勿躁~", Toast.LENGTH_LONG).show();
+    			Toast.makeText(context, "正在同步文件ing，稍安勿躁~", Toast.LENGTH_LONG).show();
     			return;
     		}
 

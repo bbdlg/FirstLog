@@ -365,7 +365,7 @@ public class GuideActivity extends Activity {
 			userdata.setContent(yearAndMonth+"/"+name);
 			
 			UserDataHelper userDataHelper = new UserDataHelper(GuideActivity.this);
-			userDataHelper.SaveUserData(userdata);
+			userDataHelper.saveUserData(userdata);
 		}
 	}
 	

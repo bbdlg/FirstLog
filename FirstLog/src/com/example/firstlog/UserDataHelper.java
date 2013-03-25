@@ -29,7 +29,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
     }
     
 	//save user's firstlog data
-    public Long SaveUserData(UserData data) {
+    public Long saveUserData(UserData data) {
 		ContentValues values = new ContentValues();
 		values.put(UserData.EMAIL, data.getEmail());
 		values.put(UserData.TIMESEC, data.getTimesec());
@@ -38,7 +38,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
 		values.put(UserData.MARK, data.getMark());
 		values.put(UserData.SORT, data.getSort());
     	values.put(UserData.CONTENT, data.getContent());
-    	values.put(UserData.DELETE, data.getComment());
+    	values.put(UserData.DELETE, data.getDeleted());
     	Long uid = dbUserData.insert(UserDataHelper.TABLE_NAME, UserData.ID, values);
     	Log.e("SaveUserData", uid+"");
     	return uid;
@@ -90,7 +90,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
         }
     }
     
-    public List<UserData> GetUserData(int start, int end)
+    public List<UserData> getUserData(int start, int end)
     {
         List<UserData> dataList = new ArrayList<UserData>();
         Cursor cursor = dbUserData.query(UserDataHelper.TABLE_NAME, null, null, null, null, null, UserData.TIMESEC+" DESC", ""+start+","+end);
@@ -104,7 +104,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
             data.setMark(cursor.getString(5));
             data.setSort(cursor.getString(6));
             data.setContent(cursor.getString(7));
-            data.setComment(cursor.getString(8));
+            data.setDeleted(cursor.getString(8));
             dataList.add(data);
             cursor.moveToNext();
         }
@@ -112,6 +112,14 @@ public class UserDataHelper extends SQLiteOpenHelper {
         cursor.close();
         
         return dataList;
+    }
+    
+    //删除UserData表的记录
+    public int delUserData(String email)
+    {
+        int id = dbUserData.delete(UserDataHelper.TABLE_NAME, UserInfo.EMAIL +"="+email, null);
+        Log.e("DelUserInfo","delete username<"+email+"> databases, ret = "+id+"");
+        return id;
     }
 
 }

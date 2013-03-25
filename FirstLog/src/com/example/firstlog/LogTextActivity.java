@@ -39,10 +39,10 @@ public class LogTextActivity extends Activity {
 				data.setLatitude(""+((FirstLogHelper)getApplication()).getLocation().getLatitude());
 				data.setSort(UserData.TEXT);
 				data.setContent(contentEditText.getText().toString());
-				data.setComment("");
+				data.setDeleted("");
 				
 				UserDataHelper userDataHelper = new UserDataHelper(LogTextActivity.this);
-				userDataHelper.SaveUserData(data);
+				userDataHelper.saveUserData(data);
 
 				// TODO Auto-generated method stub
 				finish();

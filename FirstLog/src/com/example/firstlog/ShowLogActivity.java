@@ -36,7 +36,7 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 
 	private void geneItems() {
     	UserDataHelper userDataHelper = new UserDataHelper(ShowLogActivity.this);
-    	List<UserData> data = userDataHelper.GetUserData(searchLogOffset, searchLogStep);
+    	List<UserData> data = userDataHelper.getUserData(searchLogOffset, searchLogStep);
     	for(int i=0; i<data.size(); i++) {
     		items.add(
     				"\n"+

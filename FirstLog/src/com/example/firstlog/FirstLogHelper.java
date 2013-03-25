@@ -8,6 +8,7 @@ import android.app.Application;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.os.Environment;
@@ -40,11 +41,11 @@ public class FirstLogHelper extends Application {
 	 * @返回yyy-MM-dd HH:mm:ss
 	 */
 	public String getTime() {
-		Date currentTime = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		String dateString = formatter.format(currentTime);
-		return dateString;
-		//return System.currentTimeMillis();
+		//Date currentTime = new Date();
+		//SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		//String dateString = formatter.format(currentTime);
+		//return dateString;
+		return String.valueOf(System.currentTimeMillis());
 	}
 	
 	/*
@@ -136,6 +137,9 @@ public class FirstLogHelper extends Application {
 	  return time;
 	}
 
-
-	
+	public String getCurUsername() {
+		SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+		String email = statusPreferences.getString("username", "noSuchEmailUser");
+		return email;
+	}
 }
