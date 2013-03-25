@@ -8,6 +8,5 @@
 	<classpathentry kind="lib" path="libs/Baidu-PCS-SDK-Android-L2-2.1.0.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.2.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry exported="true" kind="lib" path="D:/android/adt-bundle-windows-x86/sdk/tools/support/annotations.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
