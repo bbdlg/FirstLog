@@ -12,6 +12,7 @@ import com.baidu.solution.pcs.sd.model.Order;
 import com.baidu.solution.pcs.sd.model.RecordSet;
 import com.baidu.solution.pcs.sd.model.Table;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,10 +40,11 @@ public class TableSyncHelper {
 		TableSyncHelper.email = email;
 	}
 
-	public TableSyncHelper(final Context context) {
+	public TableSyncHelper(final Context context, final String email) {
 		// TODO Auto-generated constructor stub
 		TableSyncHelper.context = context;
-		TableSyncHelper.email = new FirstLogHelper().getCurUsername();
+		//TableSyncHelper.email = new FirstLogHelper().getCurUsername();
+		this.email = email;
 		setToken(FirstLogHelper.token);
 	}
 

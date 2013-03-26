@@ -45,7 +45,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
 	}
     
     //创建表
-	public void createTable(SQLiteDatabase db) {
+	public static void createTable(SQLiteDatabase db) {
 		Log.e("UserDataHelper","call UserDataHelper onCreate");
 		// TODO Auto-generated method stub
         db.execSQL("CREATE TABLE IF NOT EXISTS "+

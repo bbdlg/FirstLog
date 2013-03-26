@@ -26,6 +26,8 @@ public class UserInfoHelper extends SQLiteOpenHelper {
                 UserInfo.PASSWD+" varchar"+
                 ")"
                 );
+        
+        UserDataHelper.createTable(db);
 	}
 
 	//更新表

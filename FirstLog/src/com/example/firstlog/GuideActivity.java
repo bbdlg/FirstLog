@@ -294,13 +294,15 @@ public class GuideActivity extends Activity {
 			}
 			else {
 				Log.i("sync files", "token has found");
+				
 				FirstLogHelper.token = token;
 				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
 				fileSyncHelper.syncFiles();
-				//TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this);
-				//tableSyncHelper.createTable();
-				//tableSyncHelper.deleteTable();
-				//tableSyncHelper.syncTable();
+				
+				Log.w("sync tables", "start sync ...");
+				TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this, curuser);
+				tableSyncHelper.syncTables();
+				Log.w("sync tables", "finish sync!");
 			}
 			
             
