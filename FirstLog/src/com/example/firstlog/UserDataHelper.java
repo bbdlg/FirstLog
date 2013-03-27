@@ -117,7 +117,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
     //删除UserData表的记录
     public int delUserData(String email)
     {
-        int id = dbUserData.delete(UserDataHelper.TABLE_NAME, UserInfo.EMAIL +"="+email, null);
+        int id = dbUserData.delete(UserDataHelper.TABLE_NAME, UserData.EMAIL +"=\""+email+"\"", null);
         Log.e("DelUserInfo","delete username<"+email+"> databases, ret = "+id+"");
         return id;
     }

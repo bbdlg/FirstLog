@@ -9,16 +9,16 @@ import com.baidu.solution.pcs.sd.PcsSd;
 import com.baidu.solution.pcs.sd.impl.tables.CreateTable;
 import com.baidu.solution.pcs.sd.model.ColumnType;
 import com.baidu.solution.pcs.sd.model.Order;
+import com.baidu.solution.pcs.sd.model.Record;
 import com.baidu.solution.pcs.sd.model.RecordSet;
 import com.baidu.solution.pcs.sd.model.Table;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
 public class TableSyncHelper {
 	
-	private final static String FISRTLOG_TABLE = "firstlog_userdata";
+	private final static String FISRTLOG_TABLE = "firstlog_remote";
 	private static Context context;
 	private static String token;
 	private static String email;
@@ -44,7 +44,7 @@ public class TableSyncHelper {
 		// TODO Auto-generated constructor stub
 		TableSyncHelper.context = context;
 		//TableSyncHelper.email = new FirstLogHelper().getCurUsername();
-		this.email = email;
+		TableSyncHelper.email = email;
 		setToken(FirstLogHelper.token);
 	}
 
@@ -73,7 +73,10 @@ public class TableSyncHelper {
 		create.addColumn(UserDataRemote.CONTENT, "text content or path of audio, video and photo.", ColumnType.STRING, true);
 		
 		//add index
-		create.addIndex(UserDataRemote.TIMESEC_INDEX, UserDataRemote.TIMESEC, Order.ASC);
+		create.addIndex(UserDataRemote.TIMESEC_INDEX, UserDataRemote.TIMESEC, Order.DESC);
+		
+		//set the index to be unique.
+		create.setIndexUnique(UserDataRemote.TIMESEC_INDEX);
 		
 		return create.execute();
 	}
@@ -111,12 +114,12 @@ public class TableSyncHelper {
 		List<UserData> userDatas = userDataHelper.getUserData(0, 10000);
 		for(int i=0; i<userDatas.size(); i++) {
 			userDataRemotes.add(new UserDataRemote(
-					userDataRemotes.get(i).getTimesec(), 
-					userDataRemotes.get(i).getLongitude(), 
-					userDataRemotes.get(i).getLatitude(), 
-					userDataRemotes.get(i).getMark(), 
-					userDataRemotes.get(i).getSort(), 
-					userDataRemotes.get(i).getContent()));
+					userDatas.get(i).getTimesec(), 
+					userDatas.get(i).getLongitude(), 
+					userDatas.get(i).getLatitude(), 
+					userDatas.get(i).getMark(), 
+					userDatas.get(i).getSort(), 
+					userDatas.get(i).getContent()));
 			Log.i("sync tables", "remote save content:"+userDataRemotes.get(i).getContent());
 		}
 		
@@ -135,9 +138,11 @@ public class TableSyncHelper {
 		UserDataRemote userDataRemote;
 		UserData userData = new UserData();
 		UserDataHelper userDataHelper = new UserDataHelper(context);
+		List<Record> records = recordSet.getRecords();
 		
-		for(int i=0; i<recordSet.getRecords().size(); i++) {
-			userDataRemote = recordSet.getRecords().get(i).toType(UserDataRemote.class);
+		for(int i=0; i<recordSet.getCount(); i++) {
+			Record record = recordSet.getRecords().get(0);
+			userDataRemote = record.toType(UserDataRemote.class);
 			userData.setEmail(email);
 			userData.setTimesec(userDataRemote.getTimesec());
 			userData.setLongitude(userDataRemote.getLongitude());
@@ -161,13 +166,14 @@ public class TableSyncHelper {
 
     		Thread workThread = new Thread(new Runnable(){
 				public void run() {
+					Log.i("sync tables", "start sync tables ...");
 					
 					//createTable
 					try {
 						createTable();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						//e1.printStackTrace();
 					}
 					
 					//delete local database where deleted flag is setted ...
@@ -178,8 +184,9 @@ public class TableSyncHelper {
 						insertRecords();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
+					Log.i("sync tables", "have pushed local records to cloud pan");
 					
 					//drop local database
 					new UserDataHelper(context).delUserData(email);
@@ -189,11 +196,13 @@ public class TableSyncHelper {
 						downloadRecords();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
+					Log.i("sync tables", "have download records on cloud pan to local database");
 					
 					//finish upload list
 					isSyncing = false;
+					Log.i("sync tables", "finish sync tables");
 				}
 			});
 			 

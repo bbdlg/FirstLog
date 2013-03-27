@@ -249,7 +249,8 @@ public class FileSyncHelper {
 
     		Thread workThread = new Thread(new Runnable(){
 				public void run() {
-					
+					String str = "";
+					Log.i("sync files", "start sync files ...");					
 
 					//get remote file list
 		    		BaiduPCSClient api = new BaiduPCSClient();
@@ -271,6 +272,7 @@ public class FileSyncHelper {
 		    				remoteFilelist.add(remoteRootFileList.list.get(i).path.substring(FirstLogHelper.remoteRootPath.length()+1));
 		    			}
 		    		}
+		    		Log.i("sync files", "got remote file list");
 		    		
 		    		//get local file list
 		    		File localDir = new File(FirstLogHelper.localRootPath);	
@@ -280,9 +282,10 @@ public class FileSyncHelper {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					Log.i("sync files", "got local file list");
 										
-					//debug
-					String str = "localfilelist size = "+localFileList.size()+"\n";
+					/*/debug
+					str = "localfilelist size = "+localFileList.size()+"\n";
 					for(int i=0; i<localFileList.size(); i++) {
 						str += (localFileList.get(i)+"\n");
 					}
@@ -291,6 +294,7 @@ public class FileSyncHelper {
 						str += (remoteFilelist.get(i)+"\n");
 					}
 					Log.i("sync files", str);
+					*/
 					
 					//compare remoteFileList and localFileList
 					for(int i=localFileList.size()-1; i>=0; i--) {
@@ -310,8 +314,9 @@ public class FileSyncHelper {
 						}
 					}
 					downloadFileList.addAll(remoteFilelist);
+					Log.i("sync files", "analyzed download and upload file lists");
 					
-					//debug
+					/*/debug
 					str = "uploadFileList size = "+uploadFileList.size()+"\n";
 					for(int i=0; i<uploadFileList.size(); i++) {
 						str += (uploadFileList.get(i)+"\n");
@@ -321,13 +326,17 @@ public class FileSyncHelper {
 						str += (downloadFileList.get(i)+"\n");
 					}
 					Log.i("sync files", str);
+					*/
 		    		
 		    		//start upload list
 					upload(uploadFileList);
+					Log.i("sync files", "have pushed local files to cloud pan");
 					download(downloadFileList);
+					Log.i("sync files", "have download fields on cloud pan to local database");
 					
 					//finish upload list
 					isSyncing = false;
+					Log.i("sync files", "finish sync files");
 				}
 			});
 			 

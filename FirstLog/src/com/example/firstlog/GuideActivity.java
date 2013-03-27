@@ -290,22 +290,24 @@ public class GuideActivity extends Activity {
             String curuser = statusPreferences.getString("username", "noSuchEmailUser");
             String token = statusPreferences.getString("token_of_"+curuser, "no_token");
 			if(token.equals("no_token")) {
-				Log.e("sync files", "token has not found");				
+				Log.e("sync", "token has not found");
+				Toast.makeText(this, "当前账户未授权，不妨换个账号登录试试~", Toast.LENGTH_LONG).show();
 			}
-			else {
-				Log.i("sync files", "token has found");
-				
+			else {				
 				FirstLogHelper.token = token;
+				
+				Log.w("sync", "start sync ...");
+				Toast.makeText(this, "开始同步文件和数据库...", Toast.LENGTH_LONG).show();
+				
 				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
 				fileSyncHelper.syncFiles();
-				
-				Log.w("sync tables", "start sync ...");
 				TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this, curuser);
 				tableSyncHelper.syncTables();
-				Log.w("sync tables", "finish sync!");
+				
+				Log.w("sync", "finish sync!");
+				Toast.makeText(this, "恭喜恭喜！文件和数据库都同步完成啦~", Toast.LENGTH_LONG).show();
 			}
 			
-            
         	break;
 
         }
