@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.baidu.solution.client.service.ServiceException;
 import com.baidu.solution.pcs.sd.PcsSd;
+import com.baidu.solution.pcs.sd.impl.ErrorInfo;
 import com.baidu.solution.pcs.sd.impl.tables.CreateTable;
 import com.baidu.solution.pcs.sd.model.ColumnType;
 import com.baidu.solution.pcs.sd.model.Order;
@@ -167,42 +168,45 @@ public class TableSyncHelper {
     		Thread workThread = new Thread(new Runnable(){
 				public void run() {
 					Log.i("sync tables", "start sync tables ...");
-					
-					//createTable
 					try {
-						createTable();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						//e1.printStackTrace();
-					}
-					
-					//delete local database where deleted flag is setted ...
-					//delete same record in remote database ...
-					
-					//insert all local record into remote database					
-					try {
+						//createTable
+						try {
+							createTable();
+						} catch (ServiceException e) {
+							// TODO Auto-generated catch block
+							//e1.printStackTrace();
+							ErrorInfo info = e.toErrorInformation(ErrorInfo.class);
+							long code = info.getErrorCode();
+							if (code == 31476 || code == 31472) {
+								Log.w("sync tables", "Table has exist!");
+							}
+							Log.e("sync tables", "Step 1: Create " + TableSyncHelper.FISRTLOG_TABLE
+									+ " table failed:" + e.getMessage());
+							throw e;
+						}
+						
+						//delete local database where deleted flag is setted ...
+						//delete same record in remote database ...
+						
+						//insert all local record into remote database			
 						insertRecords();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						//e.printStackTrace();
-					}
-					Log.i("sync tables", "have pushed local records to cloud pan");
-					
-					//drop local database
-					new UserDataHelper(context).delUserData(email);
-					
-					//download remote database
-					try {
+						Log.i("sync tables", "have pushed local records to cloud pan");
+						
+						//drop local database
+						new UserDataHelper(context).delUserData(email);
+						
+						//download remote database
 						downloadRecords();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						//e.printStackTrace();
+						Log.i("sync tables", "have download records on cloud pan to local database");
+						
+						//finish upload list
+						isSyncing = false;
+						Log.i("sync tables", "finish sync tables");
+						
+					}catch (Exception e_io) {
+						// TODO: handle exception
+						e_io.printStackTrace();
 					}
-					Log.i("sync tables", "have download records on cloud pan to local database");
-					
-					//finish upload list
-					isSyncing = false;
-					Log.i("sync tables", "finish sync tables");
 				}
 			});
 			 
