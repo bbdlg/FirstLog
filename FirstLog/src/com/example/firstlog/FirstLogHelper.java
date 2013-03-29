@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class FirstLogHelper extends Application {
+	public static final String mbAppId = "621606";
 	public static final String mbApiKey = "5tyi3bBpNWPXZUZjpu7QacxP";//请替换申请客户端应用时获取的Api Key串
 	public static final String remoteRootPath =  "/apps/FirstLog";
 	public static final String localRootPath = Environment.getExternalStorageDirectory().getPath() + "/FirstLog";
