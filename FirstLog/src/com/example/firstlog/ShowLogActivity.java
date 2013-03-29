@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter;
 
 public class ShowLogActivity extends Activity implements IXListViewListener {
 	private XListView mListView;
-	private ArrayAdapter<String> mAdapter;
-	private ArrayList<String> items = new ArrayList<String>();
+	private LogListAdapter mAdapter;
+	private ArrayList<UserData> items = new ArrayList<UserData>();
 	private Handler mHandler;
 	private int searchLogOffset = 0;
 	private static int searchLogStep = 5;
@@ -26,7 +26,7 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 		geneItems();
 		mListView = (XListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
-		mAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
+		mAdapter = new LogListAdapter(ShowLogActivity.this, items);
 		mListView.setAdapter(mAdapter);
 //		mListView.setPullLoadEnable(false);		//down
 		mListView.setPullRefreshEnable(false);	//up
@@ -37,14 +37,7 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 	private void geneItems() {
     	UserDataHelper userDataHelper = new UserDataHelper(ShowLogActivity.this);
     	List<UserData> data = userDataHelper.getUserData(searchLogOffset, searchLogStep);
-    	for(int i=0; i<data.size(); i++) {
-    		items.add(
-    				"\n"+
-    				"时间:"+data.get(i).getTimesec()+"\n"+
-    				"内容:"+data.get(i).getContent()+
-    				"\n");
-    		Log.i("get user data", "start:"+searchLogOffset+", end:"+searchLogStep);
-    	}
+    	items.addAll(data);
     	setSearchLogOffset(searchLogOffset+searchLogStep);
 	}
 
@@ -61,8 +54,8 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 			public void run() {
 				items.clear();
 				geneItems();
-				// mAdapter.notifyDataSetChanged();
-				mAdapter = new ArrayAdapter<String>(ShowLogActivity.this, R.layout.list_item, items);
+				mAdapter.notifyDataSetChanged();
+				mAdapter = new LogListAdapter(ShowLogActivity.this, items);
 				mListView.setAdapter(mAdapter);
 				onLoad();
 			}
