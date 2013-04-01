@@ -249,7 +249,6 @@ public class FileSyncHelper {
 
     		Thread workThread = new Thread(new Runnable(){
 				public void run() {
-					String str = "";
 					Log.i("sync files", "start sync files ...");					
 
 					//get remote file list

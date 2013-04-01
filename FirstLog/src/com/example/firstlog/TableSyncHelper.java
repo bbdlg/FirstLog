@@ -139,7 +139,6 @@ public class TableSyncHelper {
 		UserDataRemote userDataRemote;
 		UserData userData = new UserData();
 		UserDataHelper userDataHelper = new UserDataHelper(context);
-		List<Record> records = recordSet.getRecords();
 		
 		for(int i=0; i<recordSet.getCount(); i++) {
 			Record record = recordSet.getRecords().get(0);
