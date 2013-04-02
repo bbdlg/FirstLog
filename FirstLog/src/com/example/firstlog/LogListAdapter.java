@@ -65,7 +65,7 @@ public class LogListAdapter extends BaseAdapter {
 					Bundle bundle = new Bundle();
     				bundle.putString("imagePath", FirstLogHelper.localRootPath+"/"+info.getContent());
     				intent.putExtras(bundle);
-					intent.setClass(context, PreviewImageActivity.class);
+					intent.setClass(context, PreviewPhotoActivity.class);
 					context.startActivity(intent);
 				}
 			});

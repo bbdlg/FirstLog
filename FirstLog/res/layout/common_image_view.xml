@@ -3,13 +3,20 @@
     android:id="@+id/rl"  
     android:layout_width="fill_parent"  
     android:layout_height="fill_parent" >  
-  
+<!--    
     <com.example.firstlog.ImageControl  
         android:id="@+id/common_imageview_imageControl1"  
         android:layout_width="fill_parent"  
         android:layout_height="fill_parent"  
         android:src="@drawable/ic_launcher" />  
-  
+-->
+      <ImageView 
+        android:id="@+id/common_imageview_imageControl1"  
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:scaleType="matrix" 
+        android:src="@drawable/ic_launcher" />  
 <!--     
 	<LinearLayout
         android:id="@+id/common_imageview_llTitle"
