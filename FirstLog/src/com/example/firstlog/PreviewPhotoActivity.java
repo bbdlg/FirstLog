@@ -213,4 +213,20 @@ public class PreviewPhotoActivity extends Activity implements OnTouchListener {
         float y = event.getY(0) + event.getY(1);
         point.set(x / 2, y / 2);
     }
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+        if(bitmap != null){  
+	        if(!bitmap.isRecycled()){  
+	            bitmap.recycle();   //回收图片所占的内存  
+	            bitmap = null;  
+	             System.gc();  //提醒系统及时回收  
+	        }
+        }
+	}
 }
