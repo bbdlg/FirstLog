@@ -16,6 +16,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:scaleType="matrix" 
+        android:contentDescription="@string/about"
         android:src="@drawable/ic_launcher" />  
 <!--     
 	<LinearLayout

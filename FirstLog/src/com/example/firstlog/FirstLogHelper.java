@@ -130,11 +130,11 @@ public class FirstLogHelper extends Application {
 	 * @param str
 	 * @return
 	 */
-	public String getDateTimeByMillisecond(String str) {
+	public static String getDateTimeByMillisecond(String str) {
 	
 	  Date date = new Date(Long.valueOf(str));
 	
-	  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss E");
 	
 	  String time = format.format(date);
 	

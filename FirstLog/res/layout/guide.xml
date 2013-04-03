@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_gradual_darkgreen"
     android:orientation="vertical" >
 
 
@@ -43,7 +44,8 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_margin="5dp"
-		    android:text="@+string/guide_text" />
+		    android:text="@+string/guide_text"
+		    android:textColor="@color/orange" />
 
              </LinearLayout>
 
@@ -69,7 +71,8 @@
                  android:layout_width="100dp"
                  android:layout_height="wrap_content"
                  android:layout_margin="10dp"
-                 android:text="@+string/guide_audio" />
+                 android:text="@+string/guide_audio"
+                 android:textColor="@color/orange" />
 
          </LinearLayout>
 
@@ -118,7 +121,8 @@
                      android:layout_width="100dp"
                      android:layout_height="wrap_content"
                      android:layout_margin="10dp"
-                     android:text="@+string/guide_photo" />
+                     android:text="@+string/guide_photo"
+                     android:textColor="@color/orange" />
 
              </LinearLayout>
 
@@ -144,7 +148,8 @@
                  android:layout_width="100dp"
                  android:layout_height="wrap_content"
                  android:layout_margin="10dp"
-                 android:text="@+string/guide_video" />
+                 android:text="@+string/guide_video"
+                 android:textColor="@color/orange" />
 
          </LinearLayout>
 
@@ -179,7 +184,8 @@
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:layout_margin="10dp"
-                             android:text="@+string/guide_showlog" />
+                             android:text="@+string/guide_showlog"
+                             android:textColor="@color/orange" />
 
                      </LinearLayout>
                  </LinearLayout></LinearLayout>

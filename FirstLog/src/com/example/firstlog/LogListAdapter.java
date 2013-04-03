@@ -4,9 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,13 +47,23 @@ public class LogListAdapter extends BaseAdapter {
         View itemView = inflater.inflate(R.layout.list_item, null);  
         final UserData info = list.get(position);  
         String sort = info.getSort();
-        TextView  textView 	= (TextView) itemView.findViewById(R.id.list_item_textview);  
-        ImageView imageView = (ImageView)itemView.findViewById(R.id.list_image);  
-        textView.setText(info.getContent()); 
-        if(sort.equals(UserData.PHOTO)) {
-        	Bitmap bmpTmp = FirstLogHelper.getImageThumbnail((FirstLogHelper.localRootPath+"/"+info.getContent()), 200, 200); 
-        	Log.i("LogListAdapter", "set bmp path:<"+FirstLogHelper.localRootPath+"/"+info.getContent()+">");
-        	imageView.setImageBitmap(bmpTmp);
+        TextView  dateAndTime 	= (TextView) itemView.findViewById(R.id.list_item_date_and_time);  
+        TextView  text 	= (TextView) itemView.findViewById(R.id.list_item_text);
+        ImageView imageView = (ImageView)itemView.findViewById(R.id.list_item_photo); 
+        
+        dateAndTime.setText(FirstLogHelper.getDateTimeByMillisecond(info.getTimesec()));
+        text.setVisibility(View.GONE);
+        imageView.setVisibility(View.GONE);
+        
+        if(sort.equals(UserData.TEXT)) {
+        	text.setVisibility(View.VISIBLE);
+        	text.setText(info.getContent()); 
+        }
+        else if(sort.equals(UserData.PHOTO)) {
+        	imageView.setVisibility(View.VISIBLE);
+        	//Bitmap bmpTmp = FirstLogHelper.getImageThumbnail((FirstLogHelper.localRootPath+"/"+info.getContent()), 200, 200); 
+        	//Log.i("LogListAdapter", "set bmp path:<"+FirstLogHelper.localRootPath+"/"+info.getContent()+">");
+        	//imageView.setImageBitmap(bmpTmp);
         	imageView.setOnClickListener(new OnClickListener() {
 				
 				@Override

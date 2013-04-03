@@ -2,34 +2,59 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_gradual_darkgreen"
     android:orientation="horizontal"
     android:padding="5dip" >
-    <!-- ListRow Left side Thumbnail image -->
+    
+    <TextView
+        android:id="@+id/list_item_date_and_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="false"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="5dip"
+        android:paddingBottom="10dip"
+        android:text="2013年4月4日 17点34分55秒"
+        android:textColor="@color/orange"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+    
+	<TextView
+	    android:id="@+id/list_item_text"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/list_item_date_and_time"
+	    android:layout_centerVertical="false"
+	    android:layout_marginBottom="5dip"
+	    android:layout_marginLeft="5dip"
+	    android:layout_marginTop="5dip"
+	    android:paddingBottom="10dip"
+	    android:text="测试中文abcdefg123456"
+	    android:textColor="@color/orange"
+	    android:textIsSelectable="false"
+	    android:textSize="22sp"
+	    android:textStyle="bold"
+	    android:typeface="sans" />
+	
     <LinearLayout
         android:id="@+id/thumbnail"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="5dip"
+        android:layout_below="@+id/list_item_text"
+        android:gravity="center"
         android:padding="3dip" >
+
         <ImageView
-            android:id="@+id/list_image"
-            android:contentDescription="@string/app_name"
+            android:id="@+id/list_item_photo"
             android:layout_width="60dip"
             android:layout_height="60dip"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/ic_launcher" />
+
     </LinearLayout>
-    <TextView
-        android:id="@+id/list_item_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/list_image"
-        android:layout_marginLeft="75dip"
-        android:layout_centerVertical="true"
-        android:paddingBottom ="10dip"
-        android:text="time"
-        android:textColor="#040404"
-        android:textSize="25dip"
-        android:textStyle="bold"
-        android:typeface="sans" />
 </RelativeLayout>  
