@@ -2,6 +2,7 @@
 <lint>
     <issue id="CommitPrefEdits" severity="ignore" />
     <issue id="CutPasteId" severity="ignore" />
+    <issue id="FloatMath" severity="ignore" />
     <issue id="NewApi" severity="ignore">
         <ignore path="src\com\example\firstlog\LogTextActivity.java" />
     </issue>
