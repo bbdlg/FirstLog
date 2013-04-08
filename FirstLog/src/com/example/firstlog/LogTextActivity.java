@@ -293,7 +293,9 @@ public class LogTextActivity extends Activity {
 				Bundle bundle = data.getExtras();
 		        if((null != bundle) && (false == bundle.isEmpty())) {
 		        	markStr = bundle.getString("markStr");
-		        	changeMarkIcon();
+		        	if(!markStr.equals("")) {
+		        		changeMarkIcon();
+		        	}
 		        }
 				break;
 		}
