@@ -1,194 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradual_darkgreen"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:id="@+id/RelativeLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="1" >
-     
-     </LinearLayout>
+        <Button
+            android:id="@+id/button_startlog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:padding="25dp"
+            android:text="@+string/guide_startlog"
+            android:textColor="@color/orange"
+            android:textSize="25sp" />
+	    
+        <Button
+            android:id="@+id/button_showlog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_startlog"
+            android:layout_marginBottom="20dp"
+            android:padding="25dp"
+            android:text="@+string/guide_showlog"
+            android:textColor="@color/orange"
+            android:textSize="25sp" />
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="1" >
-
-         <LinearLayout
-             android:layout_width="wrap_content"
-             android:layout_height="match_parent"
-             android:layout_weight="1" >
-
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_weight="1"
-              android:gravity="center_vertical|right"
-              android:measureWithLargestChild="true" >
-
-          </LinearLayout>
-
-	<LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_weight="1"
-                 android:gravity="left|center_vertical"
-                 android:measureWithLargestChild="true" >
-
-		<Button
-		    android:id="@+id/starttext"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_margin="5dp"
-		    android:text="@+string/guide_text"
-		    android:textColor="@color/orange" />
-
-             </LinearLayout>
-
-         </LinearLayout>
-
-     </LinearLayout>
-
-     
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="1" >
-
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-             android:gravity="center_vertical|right"
-             android:measureWithLargestChild="true" >
-
-             <Button
-                 android:id="@+id/startaudio"
-                 android:layout_width="100dp"
-                 android:layout_height="wrap_content"
-                 android:layout_margin="10dp"
-                 android:text="@+string/guide_audio"
-                 android:textColor="@color/orange" />
-
-         </LinearLayout>
-
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-             android:gravity="left|center_vertical"
-             android:measureWithLargestChild="true" >
-
-         </LinearLayout>
-         
-     </LinearLayout>
-
-     
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="1" >
-
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-             android:gravity="center_vertical|right"
-             android:measureWithLargestChild="true" >
-
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_weight="1"
-                 android:gravity="center_vertical|right"
-                 android:measureWithLargestChild="true" >
-
-             </LinearLayout>
-
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_weight="1"
-                 android:gravity="left|center_vertical"
-                 android:measureWithLargestChild="true" >
-
-                 <Button
-                     android:id="@+id/startphoto"
-                     android:layout_width="100dp"
-                     android:layout_height="wrap_content"
-                     android:layout_margin="10dp"
-                     android:text="@+string/guide_photo"
-                     android:textColor="@color/orange" />
-
-             </LinearLayout>
-
-         </LinearLayout>
-         
-     </LinearLayout>
-
-     
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="1" >
-
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-             android:gravity="center_vertical|right"
-             android:measureWithLargestChild="true" >
-
-             <Button
-                 android:id="@+id/startvideo"
-                 android:layout_width="100dp"
-                 android:layout_height="wrap_content"
-                 android:layout_margin="10dp"
-                 android:text="@+string/guide_video"
-                 android:textColor="@color/orange" />
-
-         </LinearLayout>
-
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-             android:gravity="left|center_vertical"
-             android:measureWithLargestChild="true" >
-
-         </LinearLayout>
-         
-     </LinearLayout>
-
-     
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="1" >
-         
-     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
-
-                     <LinearLayout
-                         android:layout_width="match_parent"
-                         android:layout_height="match_parent"
-                         android:layout_weight="1"
-                         android:gravity="center"
-                         android:measureWithLargestChild="true" >
-
-                         <Button
-                             android:id="@+id/showlog"
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:layout_margin="10dp"
-                             android:text="@+string/guide_showlog"
-                             android:textColor="@color/orange" />
-
-                     </LinearLayout>
-                 </LinearLayout></LinearLayout>
+    </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>
