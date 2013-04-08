@@ -17,8 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import android.widget.Toast;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -120,6 +120,17 @@ public class LogTextActivity extends Activity {
 		        else {
 		        	changeLbsIcon();
 		        }
+			}
+		});
+        
+        //Location Based Service，LBS
+        ImageView lbs = (ImageView)findViewById(R.id.imageView_lbs);
+        lbs.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
         
