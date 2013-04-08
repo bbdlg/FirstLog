@@ -34,10 +34,13 @@ public class LogTextActivity extends Activity {
     private boolean isVideo = false;
     private ImageView photo;
     private boolean isPhoto = false;
+    private ImageView mark;
+    private boolean isMark = false;
 
 	private String saveDir = FirstLogHelper.localRootPath;
 	private File filePhoto;
 	private File fileVideo;
+	private String markStr = "";
     
 	private Location location = null;	
 	private LocationManager locationManager;
@@ -201,6 +204,19 @@ public class LogTextActivity extends Activity {
 			
 			}
 		});
+
+        //mark
+        mark = (ImageView)findViewById(R.id.imageView_mark);
+        mark.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(LogTextActivity.this, AddMarkActivity.class);
+				startActivityForResult(intent, UserData.ENUM_MARK);	
+			}
+		});
         
         //save
         ImageButton saveButton = (ImageButton)findViewById(R.id.imageButton_save);
@@ -273,6 +289,13 @@ public class LogTextActivity extends Activity {
 					changeVideoIcon();
 				}
 				break;
+			case UserData.ENUM_MARK:
+				Bundle bundle = data.getExtras();
+		        if((null != bundle) && (false == bundle.isEmpty())) {
+		        	markStr = bundle.getString("markStr");
+		        	changeMarkIcon();
+		        }
+				break;
 		}
 		
 		return;
@@ -295,5 +318,11 @@ public class LogTextActivity extends Activity {
     	Drawable drawable = getResources().getDrawable(R.drawable.photo_yes);
     	photo.setImageDrawable(drawable);
     	isPhoto = true;
+	}
+	
+	private void changeMarkIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.mark_yes);
+    	mark.setImageDrawable(drawable);
+    	isMark = true;
 	}
 }

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:padding="25dp"
-            android:text="@+string/guide_startlog"
+            android:text="@string/guide_startlog"
             android:textColor="@color/orange"
             android:textSize="25sp" />
 	    
@@ -29,8 +29,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/button_startlog"
             android:layout_marginBottom="20dp"
+            android:hint="@string/guide_showlog"
             android:padding="25dp"
-            android:text="@+string/guide_showlog"
+            android:text="@string/guide_showlog"
             android:textColor="@color/orange"
             android:textSize="25sp" />
 

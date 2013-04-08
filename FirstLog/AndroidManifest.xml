@@ -40,6 +40,7 @@
         <activity android:name="com.example.firstlog.LogPhotoActivity"></activity>
         <activity android:name="com.example.firstlog.ShowLogActivity"></activity>
         <activity android:name="com.example.firstlog.PreviewPhotoActivity"></activity>
+        <activity android:name="com.example.firstlog.AddMarkActivity"></activity>
     </application>
 
 
