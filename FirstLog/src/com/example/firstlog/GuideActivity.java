@@ -37,6 +37,7 @@ public class GuideActivity extends Activity {
         new Handler();
         
         //get location
+/*
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
 			
@@ -95,7 +96,7 @@ public class GuideActivity extends Activity {
         	location = new Location(LocationManager.NETWORK_PROVIDER);
         }
         ((FirstLogHelper)getApplication()).setLocation(location);
-        
+ */       
         //start text
         Button textButton = (Button)findViewById(R.id.button_startlog);
         textButton.setOnClickListener(new OnClickListener() {
