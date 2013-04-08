@@ -1,8 +1,6 @@
 package com.example.firstlog;
 
 import java.io.File;
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +10,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,6 +31,7 @@ public class GuideActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); 
         setContentView(R.layout.guide);
         
         new Handler();
@@ -100,7 +97,7 @@ public class GuideActivity extends Activity {
         ((FirstLogHelper)getApplication()).setLocation(location);
         
         //start text
-        Button textButton = (Button)findViewById(R.id.starttext);
+        Button textButton = (Button)findViewById(R.id.button_startlog);
         textButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -111,7 +108,8 @@ public class GuideActivity extends Activity {
 				startActivity(intent);
 			}
 		});      
- 
+
+        /*
         //start audio
         Button audioButton = (Button)findViewById(R.id.startaudio);
         
@@ -130,36 +128,6 @@ public class GuideActivity extends Activity {
 					Button button = (Button)findViewById(R.id.startaudio);
 					button.setText(R.string.guide_audio);
 				}
-				/*
-				String state = Environment.getExternalStorageState();
-				if (state.equals(Environment.MEDIA_MOUNTED)) {
-					file = new File(saveDir, "temp.mp3");
-					file.delete();
-					if (!file.exists()) {
-						try {
-							file.createNewFile();
-						} catch (IOException e) {
-							e.printStackTrace();
-							Toast.makeText(GuideActivity.this, "音频文件创建失败了，是什么原因呢？",
-									Toast.LENGTH_LONG).show();
-							return;
-						}
-					}
-					//Intent intent = new Intent(
-					//		"android.media.action.AUDIO_CAPTURE");
-					//intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-					
-					Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-					intent.setType("audio/amr");
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-		            //intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intent, UserData.ENUM_AUDIO);
-				} else {
-					Toast.makeText(GuideActivity.this, "您老的sdcard坏了或者没插~",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-				 */
 			}
 		}); 
         
@@ -230,9 +198,10 @@ public class GuideActivity extends Activity {
 			
 			}
 		}); 
+		*/
         
         //show log
-        Button showlogButton = (Button)findViewById(R.id.showlog);
+        Button showlogButton = (Button)findViewById(R.id.button_showlog);
         showlogButton.setOnClickListener(new OnClickListener() {
 			
 			@Override

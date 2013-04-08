@@ -24,7 +24,8 @@ FirstLog可以帮你记录生活中所有的\n
     <string name="guide_photo">拍张照片</string>
     <string name="guide_audio">说几句话</string>
     <string name="guide_video">录个视频</string>
-    <string name="guide_showlog">静静地翻阅从前的那些日子</string>
+    <string name="guide_startlog">记录现在</string>
+    <string name="guide_showlog">翻翻从前</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
