@@ -31,14 +31,16 @@ public class UserDataHelper extends SQLiteOpenHelper {
 	//save user's firstlog data
     public Long saveUserData(UserData data) {
 		ContentValues values = new ContentValues();
-		values.put(UserData.EMAIL, data.getEmail());
+		values.put(UserData.USERNAME, data.getEmail());
 		values.put(UserData.TIMESEC, data.getTimesec());
 		values.put(UserData.LONGITUDE, data.getLongitude());
 		values.put(UserData.LATITUDE, data.getLatitude());
 		values.put(UserData.MARK, data.getMark());
-		values.put(UserData.SORT, data.getSort());
-    	values.put(UserData.CONTENT, data.getContent());
-    	values.put(UserData.DELETE, data.getDeleted());
+		values.put(UserData.TEXT, data.getText());
+    	values.put(UserData.AUDIO, data.getAudio());
+    	values.put(UserData.VIDEO, data.getVideo());
+    	values.put(UserData.PHOTO, data.getPhoto());
+    	values.put(UserData.ISDELETE, data.getIsdeleted());
     	Long uid = dbUserData.insert(UserDataHelper.TABLE_NAME, UserData.ID, values);
     	Log.e("SaveUserData", uid+"");
     	return uid;
@@ -51,14 +53,16 @@ public class UserDataHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS "+
                 TABLE_NAME+"("+
                 UserData.ID+" integer primary key,"+
-                UserData.EMAIL+" varchar,"+
+                UserData.USERNAME+" varchar,"+
                 UserData.TIMESEC+" varchar,"+
                 UserData.LONGITUDE+" varchar,"+
                 UserData.LATITUDE+" varchar,"+
                 UserData.MARK+" varchar,"+
-                UserData.SORT+" varchar,"+
-                UserData.CONTENT+" varchar,"+
-                UserData.DELETE+" varchar"+
+                UserData.TEXT+" varchar,"+
+                UserData.AUDIO+" varchar,"+
+                UserData.VIDEO+" varchar,"+
+                UserData.PHOTO+" varchar,"+
+                UserData.ISDELETE+" varchar"+
                 ")"
                 );
 	}
@@ -102,9 +106,11 @@ public class UserDataHelper extends SQLiteOpenHelper {
             data.setLongitude(cursor.getString(3));
             data.setLatitude(cursor.getString(4));
             data.setMark(cursor.getString(5));
-            data.setSort(cursor.getString(6));
-            data.setContent(cursor.getString(7));
-            data.setDeleted(cursor.getString(8));
+            data.setText(cursor.getString(6));
+            data.setAudio(cursor.getString(7));
+            data.setVideo(cursor.getString(8));
+            data.setPhoto(cursor.getString(9));
+            data.setIsdeleted(cursor.getString(10));
             dataList.add(data);
             cursor.moveToNext();
         }
@@ -115,10 +121,10 @@ public class UserDataHelper extends SQLiteOpenHelper {
     }
     
     //删除UserData表的记录
-    public int delUserData(String email)
+    public int delUserData(String username)
     {
-        int id = dbUserData.delete(UserDataHelper.TABLE_NAME, UserData.EMAIL +"=\""+email+"\"", null);
-        Log.e("DelUserInfo","delete username<"+email+"> databases, ret = "+id+"");
+        int id = dbUserData.delete(UserDataHelper.TABLE_NAME, UserData.USERNAME +"=\""+username+"\"", null);
+        Log.e("DelUserInfo","delete username<"+username+"> databases, ret = "+id+"");
         return id;
     }
 

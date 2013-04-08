@@ -33,7 +33,7 @@ public class LogTextActivity extends Activity {
 		        }
 		        
 		        //store in db
-				SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+/*				SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
 		        String email = statusPreferences.getString("username", "noSuchEmailUser");
 				UserData data = new UserData();
 				data.setEmail(email);
@@ -46,7 +46,7 @@ public class LogTextActivity extends Activity {
 				
 				UserDataHelper userDataHelper = new UserDataHelper(LogTextActivity.this);
 				userDataHelper.saveUserData(data);
-
+*/
 				// TODO Auto-generated method stub
 				finish();
 			}

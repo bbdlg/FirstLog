@@ -46,7 +46,7 @@ public class LogListAdapter extends BaseAdapter {
         LayoutInflater inflater = context.getLayoutInflater();  
         View itemView = inflater.inflate(R.layout.list_item, null);  
         final UserData info = list.get(position);  
-        String sort = info.getSort();
+/*        String sort = info.getSort();
         TextView  dateAndTime 	= (TextView) itemView.findViewById(R.id.list_item_date_and_time);  
         TextView  text 	= (TextView) itemView.findViewById(R.id.list_item_text);
         ImageView imageView = (ImageView)itemView.findViewById(R.id.list_item_photo); 
@@ -78,7 +78,7 @@ public class LogListAdapter extends BaseAdapter {
 				}
 			});
         }
-          
+ */         
         return itemView;  
 	}
 

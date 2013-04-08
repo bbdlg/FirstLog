@@ -286,7 +286,7 @@ public class GuideActivity extends Activity {
     
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+/*		
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if(RESULT_OK != resultCode) {
@@ -339,7 +339,8 @@ public class GuideActivity extends Activity {
 			
 			UserDataHelper userDataHelper = new UserDataHelper(GuideActivity.this);
 			userDataHelper.saveUserData(userdata);
-		}
+		}*/
 	}
+	
 	
 }

@@ -127,13 +127,15 @@ public class DataHelper {
     //save user's firstlog data
     public Long SaveUserData(UserData data) {
 		ContentValues values = new ContentValues();
-		values.put(UserData.EMAIL, data.getEmail());
+		values.put(UserData.USERNAME, data.getEmail());
 		values.put(UserData.TIMESEC, data.getTimesec());
 		values.put(UserData.LONGITUDE, data.getLongitude());
 		values.put(UserData.LATITUDE, data.getLatitude());
 		values.put(UserData.MARK, data.getMark());
-		values.put(UserData.SORT, data.getSort());
-    	values.put(UserData.CONTENT, data.getContent());
+		values.put(UserData.TEXT, data.getText());
+		values.put(UserData.AUDIO, data.getAudio());
+		values.put(UserData.VIDEO, data.getVideo());
+    	values.put(UserData.PHOTO, data.getPhoto());
     	Long uid = dbUserData.insert(UserDataHelper.TABLE_NAME, UserData.ID, values);
     	Log.e("SaveUserData", uid+"");
     	return uid;

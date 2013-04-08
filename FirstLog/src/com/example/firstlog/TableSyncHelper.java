@@ -70,8 +70,10 @@ public class TableSyncHelper {
 		create.addColumn(UserDataRemote.LONGITUDE, "location, longitude", ColumnType.STRING, true);
 		create.addColumn(UserDataRemote.LATITUDE, "location, latitude", ColumnType.STRING, true);
 		create.addColumn(UserDataRemote.MARK, "marks", ColumnType.STRING, true);
-		create.addColumn(UserDataRemote.SORT, "sort of content", ColumnType.STRING, true);
-		create.addColumn(UserDataRemote.CONTENT, "text content or path of audio, video and photo.", ColumnType.STRING, true);
+		create.addColumn(UserDataRemote.TEXT, "text", ColumnType.STRING, true);
+		create.addColumn(UserDataRemote.AUDIO, "audio", ColumnType.STRING, true);
+		create.addColumn(UserDataRemote.VIDEO, "video", ColumnType.STRING, true);
+		create.addColumn(UserDataRemote.PHOTO, "photo", ColumnType.STRING, true);
 		
 		//add index
 		create.addIndex(UserDataRemote.TIMESEC_INDEX, UserDataRemote.TIMESEC, Order.DESC);
@@ -87,19 +89,6 @@ public class TableSyncHelper {
 	 * @return
 	 * @throws IOException
 	 *
-	private static int getLastRecordTime()
-			throws IOException {		
-		RecordSet recordSet = new PcsSd(getToken())
-		.records()
-		.select(FISRTLOG_TABLE)
-		.addOrderBy(UserData.TIMESEC, Order.DESC)
-		.setScope(0, 1).execute();
-		
-		UserDataRemote ret = recordSet.getRecords().get(0).toType(UserDataRemote.class);
-		
-		Log.i("sync table", "get lastest record time is "+Integer.parseInt(ret.getTimesec()));
-		return  Integer.parseInt(ret.getTimesec());
-	}
 	*/
 	
 	private static RecordSet insertRecords()
@@ -119,9 +108,11 @@ public class TableSyncHelper {
 					userDatas.get(i).getLongitude(), 
 					userDatas.get(i).getLatitude(), 
 					userDatas.get(i).getMark(), 
-					userDatas.get(i).getSort(), 
-					userDatas.get(i).getContent()));
-			Log.i("sync tables", "remote save content:"+userDataRemotes.get(i).getContent());
+					userDatas.get(i).getText(), 
+					userDatas.get(i).getAudio(),
+					userDatas.get(i).getVideo(),
+					userDatas.get(i).getPhoto()));
+			Log.i("sync tables", "remote save at time:"+userDataRemotes.get(i).getTimesec());
 		}
 		
 		return service.records().insert(FISRTLOG_TABLE, userDataRemotes).execute();
@@ -148,12 +139,14 @@ public class TableSyncHelper {
 			userData.setLongitude(userDataRemote.getLongitude());
 			userData.setLatitude(userDataRemote.getLatitude());
 			userData.setMark(userDataRemote.getMark());
-			userData.setSort(userDataRemote.getSort());
-			userData.setContent(userDataRemote.getContent());
-			userData.setDeleted("");
+			userData.setText(userDataRemote.getText());
+			userData.setAudio(userDataRemote.getAudio());
+			userData.setVideo(userDataRemote.getVideo());
+			userData.setPhoto(userDataRemote.getPhoto());
+			userData.setIsdeleted("");
 			userDataHelper.saveUserData(userData);
 			
-			Log.i("sync tables", "download content:"+userData.getContent());
+			Log.i("sync tables", "download log time:"+userData.getTimesec());
 		}
 	}
 	
