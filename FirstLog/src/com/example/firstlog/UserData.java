@@ -24,6 +24,11 @@ public class UserData {
 	private String photo;
 	private String isdeleted;
 	
+    public static final int ENUM_TEXT  = 1;
+	public static final int ENUM_PHOTO  = 2;
+	public static final int ENUM_AUDIO  = 3;
+	public static final int ENUM_VIDEO  = 4;
+	
 	/**
 	 * @return the email
 	 */

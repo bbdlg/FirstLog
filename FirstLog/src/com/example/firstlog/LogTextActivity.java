@@ -1,14 +1,21 @@
 package com.example.firstlog;
 
+import java.io.File;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,14 +26,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import android.widget.Toast;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
 
 public class LogTextActivity extends Activity {
     private ImageView lbs;
-    private boolean is_lbs = false;
+    private boolean isLbs = false;
+    private ImageView video;
+    private boolean isVideo = false;
+    private ImageView photo;
+    private boolean isPhoto = false;
+
+	private String saveDir = FirstLogHelper.localRootPath;
+	private File filePhoto;
+	private File fileVideo;
     
 	private Location location = null;	
 	private LocationManager locationManager;
@@ -72,7 +83,7 @@ public class LogTextActivity extends Activity {
 			public void onLocationChanged(Location location) {
 				// TODO Auto-generated method stub
 				Log.i("gps", "call onLocationChanged()");
-				setLocation(location);				
+				setLocation(location);
 				changeLbsIcon();
 			}
 		};
@@ -123,14 +134,71 @@ public class LogTextActivity extends Activity {
 			}
 		});
         
-        //Location Based Service，LBS
-        ImageView lbs = (ImageView)findViewById(R.id.imageView_lbs);
-        lbs.setOnClickListener(new OnClickListener() {
+        //video
+        video = (ImageView)findViewById(R.id.imageView_video);
+        video.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				
+
+				String state = Environment.getExternalStorageState();
+				if (state.equals(Environment.MEDIA_MOUNTED)) {
+					fileVideo = new File(saveDir, "temp.mp4");
+					fileVideo.delete();
+					if (!fileVideo.exists()) {
+						try {
+							fileVideo.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+							Toast.makeText(LogTextActivity.this, "视频文件创建失败了，是什么原因呢？",
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					Intent intent = new Intent(
+							"android.media.action.VIDEO_CAPTURE");
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileVideo));
+					startActivityForResult(intent, UserData.ENUM_VIDEO);
+				} else {
+					Toast.makeText(LogTextActivity.this, "您老的sdcard坏了或者没插~",
+							Toast.LENGTH_SHORT).show();
+				}
+			
+			}
+		});
+ 
+        //photo
+        photo = (ImageView)findViewById(R.id.imageView_photo);
+        photo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				String state = Environment.getExternalStorageState();
+				if (state.equals(Environment.MEDIA_MOUNTED)) {
+					filePhoto = new File(saveDir, "temp.jpg");
+					filePhoto.delete();
+					if (!filePhoto.exists()) {
+						try {
+							filePhoto.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+							Toast.makeText(LogTextActivity.this, "照片文件创建失败了，是什么原因呢？",
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					Intent intent = new Intent(
+							"android.media.action.IMAGE_CAPTURE");
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(filePhoto));
+					startActivityForResult(intent, UserData.ENUM_PHOTO);
+				} else {
+					Toast.makeText(LogTextActivity.this, "您老的sdcard坏了或者没插~",
+							Toast.LENGTH_SHORT).show();
+				}
+			
 			}
 		});
         
@@ -168,7 +236,6 @@ public class LogTextActivity extends Activity {
 			}
 		});
 
-        
         //reset
         ImageButton resetButton = (ImageButton)findViewById(R.id.imageButton_delete);
         resetButton.setOnClickListener(new OnClickListener() {
@@ -182,9 +249,51 @@ public class LogTextActivity extends Activity {
 		});
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {	
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(RESULT_OK != resultCode) {
+			Log.e("GuideActivity", "Other activity return error code:"+resultCode);
+			return;
+		}
+
+		switch(requestCode) {
+			case UserData.ENUM_AUDIO:
+				break;
+	
+			case UserData.ENUM_PHOTO:
+				if(null != filePhoto) {
+					changePhotoIcon();	
+				}
+				break;
+				
+			case UserData.ENUM_VIDEO:
+				if(null != fileVideo) {
+					changeVideoIcon();
+				}
+				break;
+		}
+		
+		return;
+	}
+	
+	
 	private void changeLbsIcon() {
     	Drawable drawable = getResources().getDrawable(R.drawable.lbs_yes);
     	lbs.setImageDrawable(drawable);
-    	is_lbs = true;
+    	isLbs = true;
+	}
+	
+	private void changeVideoIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.video_yes);
+    	video.setImageDrawable(drawable);
+    	isVideo = true;
+	}
+
+	private void changePhotoIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.photo_yes);
+    	photo.setImageDrawable(drawable);
+    	isPhoto = true;
 	}
 }
