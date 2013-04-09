@@ -28,6 +28,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class LogTextActivity extends Activity {
+	private boolean isGpsAlwaysOn = true;
+	private boolean isNetworkAlwaysOn = true;
+	
+	private EditText text;
     private ImageView lbs;
     private boolean isLbs = false;
     private ImageView video;
@@ -38,8 +42,8 @@ public class LogTextActivity extends Activity {
     private boolean isMark = false;
 
 	private String saveDir = FirstLogHelper.localRootPath;
-	private File filePhoto;
-	private File fileVideo;
+	private File filePhoto = null;
+	private File fileVideo = null;
 	private String markStr = "";
     
 	private Location location = null;	
@@ -61,25 +65,32 @@ public class LogTextActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); 
         setContentView(R.layout.log_text);
+
+        text 	= (EditText)findViewById(R.id.editText_content);
+        lbs 	= (ImageView)findViewById(R.id.imageView_lbs);
+        video 	= (ImageView)findViewById(R.id.imageView_video);
+        photo 	= (ImageView)findViewById(R.id.imageView_photo);
+        mark 	= (ImageView)findViewById(R.id.imageView_mark);
         
         //Location Based Service，LBS
-        lbs = (ImageView)findViewById(R.id.imageView_lbs);
         locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
 			
 			@Override
 			public void onStatusChanged(String provider, int status, Bundle extras) {
-				//dialogTips("status changed");
+				Log.i("gps", "call onStatusChanged()"+provider);
 			}
 			
 			@Override
 			public void onProviderEnabled(String provider) {
-				//dialogTips(provider+" enable");
+				Log.i("gps", "call onProviderEnabled()"+provider);
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 			}
 			
 			@Override
 			public void onProviderDisabled(String provider) {
-				//dialogTips(provider+" disable");
+				Log.i("gps", "call onProviderDisabled()"+provider);
 			}
 			
 			@Override
@@ -92,26 +103,19 @@ public class LogTextActivity extends Activity {
 		};
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-		
+
+        //check if can get lbs
+        if(false == canGetLbs()) {
+        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "获取不到您的当前位置，请打开GPS或网络:)");
+        }
+        
         lbs.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 		        
-				// 判断Use GPS satellites.是否勾选
-		        isGpsEnabled = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
-		        // 判断Use wireless networks 是否勾选。因该函数一直返回true，故改用其他方式
-		        //boolean isNetworkEnabled = locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);    
-		        ConnectivityManager cwjManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		        if (cwjManager.getActiveNetworkInfo() != null) {
-		        	isNetworkEnabled = cwjManager.getActiveNetworkInfo().isAvailable();
-		        }
-		        
-		        Log.i("haha", "GPS:"+isGpsEnabled+", Network:"+isNetworkEnabled);
-		        
-		        if(!isGpsEnabled && !isNetworkEnabled) {
-		        	Log.i("haha", "did't set GPS or network!");
+				if(false == canGetLbs()) {
 		        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "没有网络没有GPS让我咋知道您现在在哪猫着呢？=_=");
 					return;
 		        }
@@ -138,7 +142,6 @@ public class LogTextActivity extends Activity {
 		});
         
         //video
-        video = (ImageView)findViewById(R.id.imageView_video);
         video.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -172,7 +175,6 @@ public class LogTextActivity extends Activity {
 		});
  
         //photo
-        photo = (ImageView)findViewById(R.id.imageView_photo);
         photo.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -225,28 +227,62 @@ public class LogTextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-		        EditText contentEditText = (EditText)findViewById(R.id.editText_content);
 
-		        if((contentEditText.getText().toString()).isEmpty()) {
-		        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "还没有写任何内容呢~~");
+		        if((text.getText().toString()).isEmpty()) {
+		        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "啥都不写点么？那我默认了哈");
+		        	text.setText("简单拍个爪~");
+		        	return;
+		        }
+
+		        //check location (lbs)
+		        if(null == getLocation()) {
+		        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "稍等一下下，还木有获得您的位置信息");
 		        	return;
 		        }
 		        
 		        //store in db
-/*				SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
-		        String email = statusPreferences.getString("username", "noSuchEmailUser");
+		        String curtime = ((FirstLogHelper)getApplication()).getTime();
+				String yearAndMonth = ((FirstLogHelper)getApplication()).getYearAndMonth();
+				File newfile = null;
 				UserData data = new UserData();
-				data.setEmail(email);
-				data.setTimesec(""+((FirstLogHelper)getApplication()).getTime());
-				data.setLongitude(""+((FirstLogHelper)getApplication()).getLocation().getLongitude());
-				data.setLatitude(""+((FirstLogHelper)getApplication()).getLocation().getLatitude());
-				data.setSort(UserData.TEXT);
-				data.setContent(contentEditText.getText().toString());
-				data.setDeleted("");
-				
 				UserDataHelper userDataHelper = new UserDataHelper(LogTextActivity.this);
+		        SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+		        String email = statusPreferences.getString("username", "noSuchEmailUser");
+		        //proc username
+		        data.setEmail(email);
+		        //proc time
+		        data.setTimesec(curtime);
+				//generate save directory
+				File savePath = new File(saveDir+"/"+yearAndMonth);
+				if (!savePath.exists()) {
+					savePath.mkdirs();
+				}
+		        //proc lbs
+		        data.setLongitude(""+getLocation().getLongitude());
+		        data.setLatitude(""+getLocation().getLatitude());
+				//proc text
+		        data.setText(text.getText().toString());
+				//proc video
+				if(null != fileVideo) {
+					String videoName = curtime+".mp4";
+					newfile= new File(saveDir+"/"+yearAndMonth, curtime+".mp4");
+					fileVideo.renameTo(newfile);
+					fileVideo.delete();
+			        data.setVideo(videoName);
+				}
+				//proc photo
+				if(null != filePhoto) {
+					String photoName = curtime+".jpg";
+					newfile= new File(saveDir+"/"+yearAndMonth, curtime+".jpg");
+					filePhoto.renameTo(newfile);
+					filePhoto.delete();
+			        data.setPhoto(photoName);
+				}
+				//proc mark
+				data.setMark(markStr);
+				//save data
 				userDataHelper.saveUserData(data);
-*/
+
 				// TODO Auto-generated method stub
 				finish();
 			}
@@ -303,6 +339,23 @@ public class LogTextActivity extends Activity {
 		return;
 	}
 	
+	private boolean canGetLbs() {
+		// 判断Use GPS satellites.是否勾选
+        isGpsEnabled = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        // 判断Use wireless networks 是否勾选。因该函数一直返回true，故改用其他方式
+        //boolean isNetworkEnabled = locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);    
+        ConnectivityManager cwjManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cwjManager.getActiveNetworkInfo() != null) {
+        	isNetworkEnabled = cwjManager.getActiveNetworkInfo().isAvailable();
+        }
+        
+        Log.i("haha", "GPS:"+isGpsEnabled+", Network:"+isNetworkEnabled);
+        
+        if(!isGpsEnabled && !isNetworkEnabled) {
+        	return false;
+        }
+        return true;
+	}
 	
 	private void changeLbsIcon() {
     	Drawable drawable = getResources().getDrawable(R.drawable.lbs_yes);
