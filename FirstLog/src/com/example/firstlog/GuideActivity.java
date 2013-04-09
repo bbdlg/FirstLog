@@ -36,6 +36,12 @@ public class GuideActivity extends Activity {
         
         new Handler();
         
+        //check main directory
+        File dirFirstFile=new File(saveDir);  
+        if(!dirFirstFile.exists())	{  
+             dirFirstFile.mkdir(); 
+        }
+        
         //get location
 /*
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
