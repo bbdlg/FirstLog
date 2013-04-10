@@ -125,11 +125,15 @@ public class LogTextActivity extends Activity {
 		        
 		        //try to get last gps location
 		        if(null == location) {
-		            //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		        	if(true == isGpsAlwaysOn) {
+		        		location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		        	}
 		        }
 		        //if didn't get gps location, then try to get last network location
 		        if(null == location) {
-		            //location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		        	if(true == isNetworkAlwaysOn) {
+		        		location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		        	}
 		        }
 		        //still can't get any location infomation, give waitting tips ...
 		        if(null == location) {
@@ -228,7 +232,9 @@ public class LogTextActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-		        if((text.getText().toString()).isEmpty()) {
+		        if((text.getText().toString()).isEmpty()
+		        		&& (null == fileVideo)
+		        		&& (null == filePhoto)) {
 		        	((FirstLogHelper)getApplication()).dialogTips(LogTextActivity.this, "啥都不写点么？那我默认了哈");
 		        	text.setText("简单拍个爪~");
 		        	return;
@@ -350,6 +356,9 @@ public class LogTextActivity extends Activity {
         }
         
         Log.i("haha", "GPS:"+isGpsEnabled+", Network:"+isNetworkEnabled);
+        
+        isGpsAlwaysOn = isGpsEnabled;
+        isNetworkAlwaysOn = isNetworkEnabled;
         
         if(!isGpsEnabled && !isNetworkEnabled) {
         	return false;
