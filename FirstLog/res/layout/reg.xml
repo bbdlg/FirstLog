@@ -5,7 +5,8 @@
     android:layout_marginBottom="20dp"
     android:layout_marginTop="30dp"
     android:orientation="vertical"
-    android:scrollbarAlwaysDrawVerticalTrack="false" >
+    android:scrollbarAlwaysDrawVerticalTrack="false"  
+    android:background="@drawable/bg">
 
     <LinearLayout
         android:layout_width="match_parent"

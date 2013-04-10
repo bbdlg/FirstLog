@@ -8,6 +8,7 @@ import me.maxwin.view.XListView.IXListViewListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 
 public class ShowLogActivity extends Activity implements IXListViewListener {
 	private XListView mListView;
@@ -20,6 +21,7 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.showlog);
 		geneItems();
 		mListView = (XListView) findViewById(R.id.xListView);
