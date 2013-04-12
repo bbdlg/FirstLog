@@ -2,6 +2,12 @@ package com.example.firstlog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.BDNotifyListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -12,14 +18,16 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Process;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class FirstLogHelper extends Application {
 	public static final String mbAppId = "621606";
@@ -28,18 +36,9 @@ public class FirstLogHelper extends Application {
 	public static final String localRootPath = Environment.getExternalStorageDirectory().getPath() + "/FirstLog";
 	public static String token = null; 
 	
-	private Location location;	
-	
 	//UI thread
 	public static Handler uiThreadHandler = new Handler();
 	
-	public Location getLocation() {
-		return location;
-	}
-	
-	public void setLocation(Location curLoc) {
-		location = curLoc;
-	}
 	
 	/*
 	 * @返回yyy-MM-dd HH:mm:ss
@@ -188,4 +187,97 @@ public class FirstLogHelper extends Application {
                 ThumbnailUtils.OPTIONS_RECYCLE_INPUT);  
         return bitmap;  
     }  
+    
+    
+	public BDLocation location = null;
+
+	public LocationClient mLocationClient = null;
+//	public LocationClient locationClient = null;
+//	public LocationClient LocationClient = null;
+	private String mData;  
+	public MyLocationListenner myListener = new MyLocationListenner();
+//	public MyLocationListenner listener = new MyLocationListenner();
+//	public MyLocationListenner locListener = new MyLocationListenner();
+	public TextView mTv;
+	public NotifyLister mNotifyer=null;
+	public Vibrator mVibrator01;
+	public static String TAG = "LocTestDemo";
+	
+	@Override
+	public void onCreate() {
+		mLocationClient = new LocationClient( this );
+//		locationClient = new LocationClient( this );
+//		LocationClient = new LocationClient( this );
+		mLocationClient.registerLocationListener( myListener );
+//		locationClient.registerLocationListener( listener );
+//		LocationClient.registerLocationListener( locListener );
+		//λ��������ش���
+//		mNotifyer = new NotifyLister();
+//		mNotifyer.SetNotifyLocation(40.047883,116.312564,3000,"gps");//4��������Ҫλ�����ѵĵ����꣬���庬������Ϊ��γ�ȣ����ȣ����뷶Χ�����ϵ����(gcj02,gps,bd09,bd09ll)
+//		mLocationClient.registerNotify(mNotifyer);
+		
+		super.onCreate(); 
+		Log.d(TAG, "... Application onCreate... pid=" + Process.myPid());
+		setLocationOption();
+		mLocationClient.start();
+		mLocationClient.requestLocation();
+	}
+	
+	/**
+	 * ��ʾ�ַ�
+	 * @param str
+	 */
+	public void logMsg(String str) {
+		try {
+			mData = str;
+			if ( mTv != null )
+				mTv.setText(mData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * ����������λ�õ�ʱ�򣬸�ʽ�����ַ��������Ļ��
+	 */
+	public class MyLocationListenner implements BDLocationListener {
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			setLocation(location);
+		}
+		
+		public void onReceivePoi(BDLocation poiLocation) {
+			setLocation(poiLocation);
+		}
+	}
+	
+	public class NotifyLister extends BDNotifyListener{
+		public void onNotify(BDLocation mlocation, float distance){
+			mVibrator01.vibrate(1000);
+		}
+	}
+	
+
+	public BDLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(BDLocation location) {
+		this.location = location;
+	}
+
+	private void setLocationOption(){
+		LocationClientOption option = new LocationClientOption();
+		option.setOpenGps(true);
+		option.setCoorType("bd09ll");
+		option.setServiceName("com.baidu.location.service_v2.9");
+		option.setPoiExtraInfo(true);	
+		option.setAddrType("all");	
+		option.setScanSpan(3000);
+		option.setPriority(LocationClientOption.GpsFirst);
+
+		option.setPoiNumber(10);
+		option.disableCache(true);		
+		mLocationClient.setLocOption(option);
+	}
 }

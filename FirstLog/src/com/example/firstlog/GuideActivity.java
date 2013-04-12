@@ -2,14 +2,9 @@ package com.example.firstlog;
 
 import java.io.File;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,7 +19,6 @@ import android.widget.Toast;
 
 public class GuideActivity extends Activity {
 	
-	private File file;
 	private String saveDir = FirstLogHelper.localRootPath;
 	public static boolean startRecordAudio = false;
 	

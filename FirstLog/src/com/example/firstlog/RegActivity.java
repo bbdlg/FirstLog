@@ -4,6 +4,7 @@ import com.baidu.oauth.BaiduOAuth;
 import com.baidu.oauth.BaiduOAuth.BaiduOAuthResponse;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class RegActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); 
         setContentView(R.layout.reg);
         getAccessToken = (Button) this.findViewById(R.id.getAccessToken);//响应按钮类
 

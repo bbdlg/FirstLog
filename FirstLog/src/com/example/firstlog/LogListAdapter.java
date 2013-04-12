@@ -3,15 +3,10 @@ package com.example.firstlog;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class LogListAdapter extends BaseAdapter {
     private Activity context;  
@@ -45,8 +40,8 @@ public class LogListAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
         LayoutInflater inflater = context.getLayoutInflater();  
         View itemView = inflater.inflate(R.layout.list_item, null);  
-        final UserData info = list.get(position);  
-/*        String sort = info.getSort();
+/*        final UserData info = list.get(position);  
+        String sort = info.getSort();
         TextView  dateAndTime 	= (TextView) itemView.findViewById(R.id.list_item_date_and_time);  
         TextView  text 	= (TextView) itemView.findViewById(R.id.list_item_text);
         ImageView imageView = (ImageView)itemView.findViewById(R.id.list_item_photo); 
