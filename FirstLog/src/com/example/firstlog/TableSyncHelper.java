@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 public class TableSyncHelper {
 	
-	private final static String FISRTLOG_TABLE = "firstlog_remote";
+	private final static String FISRTLOG_TABLE = "firstlog_remote1";
 	private static Context context;
 	private static String token;
 	private static String email;
@@ -114,8 +114,8 @@ public class TableSyncHelper {
 					userDatas.get(i).getPhoto()));
 			Log.i("sync tables", "remote save at time:"+userDataRemotes.get(i).getTimesec());
 		}
-		
-		return service.records().insert(FISRTLOG_TABLE, userDataRemotes).execute();
+		RecordSet aa = service.records().insert(FISRTLOG_TABLE, userDataRemotes).execute();
+		return aa;
 	}
 	
 	private static void downloadRecords() 
@@ -172,9 +172,11 @@ public class TableSyncHelper {
 							if (code == 31476 || code == 31472) {
 								Log.w("sync tables", "Table has exist!");
 							}
-							Log.e("sync tables", "Step 1: Create " + TableSyncHelper.FISRTLOG_TABLE
-									+ " table failed:" + e.getMessage());
-							throw e;
+							else {
+								Log.e("sync tables", "Step 1: Create " + TableSyncHelper.FISRTLOG_TABLE
+										+ " table failed:" + e.getMessage());
+								throw e;
+							}
 						}
 						
 						//delete local database where deleted flag is setted ...
@@ -191,13 +193,15 @@ public class TableSyncHelper {
 						downloadRecords();
 						Log.i("sync tables", "have download records on cloud pan to local database");
 						
+					}catch (Exception e_io) {
+						// TODO: handle exception
+						e_io.printStackTrace();
+					}
+					finally {
 						//finish upload list
 						isSyncing = false;
 						Log.i("sync tables", "finish sync tables");
 						
-					}catch (Exception e_io) {
-						// TODO: handle exception
-						e_io.printStackTrace();
 					}
 				}
 			});

@@ -269,8 +269,8 @@ public class GuideActivity extends Activity {
 				Log.w("sync", "start sync ...");
 				Toast.makeText(this, "开始同步文件和数据库...", Toast.LENGTH_LONG).show();
 				
-				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
-				fileSyncHelper.syncFiles();
+				//FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
+				//fileSyncHelper.syncFiles();
 				TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this, curuser);
 				tableSyncHelper.syncTables();
 				
