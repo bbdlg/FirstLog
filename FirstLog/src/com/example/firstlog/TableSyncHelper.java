@@ -86,12 +86,12 @@ public class TableSyncHelper {
 	
 	/**
 	 * Get the lastest record.
-	 * @return
 	 * @throws IOException
 	 *
 	*/
 	
-	private static RecordSet insertRecords()
+	//private static RecordSet insertRecords()
+	private static void insertRecords()
 			throws IOException {
 		
 		// MUST use access token of user whose information will be inserted to
@@ -99,6 +99,7 @@ public class TableSyncHelper {
 		PcsSd service = new PcsSd(getToken());
 
 		// Create some favorite songs and inserts them to favorite table.
+		/*
 		List<UserDataRemote> userDataRemotes = new LinkedList<UserDataRemote>();
 		UserDataHelper userDataHelper = new UserDataHelper(context);
 		List<UserData> userDatas = userDataHelper.getUserData(0, 10000);
@@ -116,6 +117,39 @@ public class TableSyncHelper {
 		}
 		RecordSet aa = service.records().insert(FISRTLOG_TABLE, userDataRemotes).execute();
 		return aa;
+		*/
+		
+		UserDataHelper userDataHelper = new UserDataHelper(context);
+		List<UserData> userDatas = userDataHelper.getUserData(0, 10000);
+		for(int i=0; i<userDatas.size(); i++) {
+			try {
+				if(userDatas.get(i).getIsdeleted().equals(UserData.ISDELETE)) {
+					//这里返回bad key的错误，尝试多次后，放弃。因暂时无法获得错误原因。
+					//待回头增加删除功能时再行添加。
+					List<String> keys = new LinkedList<String>();
+					//"name": {"=": "刘德华"} 
+					keys.add("\""+UserData.TIMESEC+"\":{"+"\"=\":"+"\""+userDatas.get(i).getTimesec()+"\"}");
+					service.records().delete(FISRTLOG_TABLE, keys).execute();
+				}
+				else {
+					UserDataRemote userDataRemote = new UserDataRemote(
+							userDatas.get(i).getTimesec(), 
+							userDatas.get(i).getLongitude(), 
+							userDatas.get(i).getLatitude(), 
+							userDatas.get(i).getMark(), 
+							userDatas.get(i).getText(), 
+							userDatas.get(i).getAudio(),
+							userDatas.get(i).getVideo(),
+							userDatas.get(i).getPhoto());
+					service.records().insert(FISRTLOG_TABLE, userDataRemote).execute();
+				}
+			} catch(Exception e_io) {
+				// TODO: handle exception
+				e_io.printStackTrace();
+			} finally {
+				;
+			}
+		}
 	}
 	
 	private static void downloadRecords() 
