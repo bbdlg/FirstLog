@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_height="wrap_content" 
+  	android:orientation="vertical" 
+  	android:layout_width="255dp" >
+    
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkgreen" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/ic_launcher" />
+	   
+	     <TextView
+	         android:id="@+id/textViewTitle"
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_vertical"
+	         android:layout_marginLeft="8dp"
+	         android:background="@color/darkgreen"
+	         android:text="TextView"
+	         android:textAppearance="?android:attr/textAppearanceLarge"
+	         android:textColor="@color/snow"
+	         android:textSize="20sp"
+	         android:textStyle="bold" >
+
+	    </TextView>
+    
+    </TableRow>
+    
+	<TextView
+	    android:id="@+id/textViewInfo"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/darkgray"
+	    android:gravity="center_vertical"
+	    android:padding="8dp"
+	    android:singleLine="false"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
+	    android:textColor="@color/snow"
+	    android:textSize="16sp" >
+
+	</TextView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkgreen"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/btnOK"
+            android:layout_width="120dp"
+            android:layout_height="32dp"
+            android:background="@color/darkgreen"
+            android:text="确定"
+            android:textColor="@color/orange"
+            android:textSize="15sp" >
+
+</Button>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:background="@color/darkgreen"
+            android:text="取消"
+            android:textColor="@color/orange"
+            android:textSize="15sp" >
+
+</Button>
+    </LinearLayout>
+</LinearLayout>
