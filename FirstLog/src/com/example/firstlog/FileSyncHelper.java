@@ -240,7 +240,7 @@ public class FileSyncHelper {
   	    context.startActivity(content);   		  	
     }
     
-    public void syncFiles() {
+    public void syncFiles(final String flag) {
     	if(null != FirstLogHelper.token){
     		if(true == isSyncing) {
     			Toast.makeText(context, "正在同步文件ing，稍安勿躁~", Toast.LENGTH_LONG).show();
@@ -328,10 +328,15 @@ public class FileSyncHelper {
 					*/
 		    		
 		    		//start upload list
-					upload(uploadFileList);
-					Log.i("sync files", "have pushed local files to cloud pan");
-					download(downloadFileList);
-					Log.i("sync files", "have download fields on cloud pan to local database");
+					if(flag.equals("upload")) {
+						upload(uploadFileList);
+						Log.i("sync files", "have pushed local files to cloud pan");
+					} else if(flag.equals("download")) {
+						download(downloadFileList);
+						Log.i("sync files", "have download fields on cloud pan to local database");
+					} else {
+						Log.i("sync files", "unknown flag");
+					}
 					
 					//finish upload list
 					isSyncing = false;

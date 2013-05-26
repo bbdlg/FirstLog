@@ -91,8 +91,8 @@ public class FirstLogHelper extends Application {
 		AlertDialog.Builder builder = new Builder(context);
 		Log.w("diag", "call Builder ... ");
 		builder.setMessage(msg);
-		//builder.setTitle("提示");
-		builder.setPositiveButton("你说对了",
+		builder.setTitle("提示");
+		builder.setPositiveButton("继续",
 		new android.content.DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -103,7 +103,7 @@ public class FirstLogHelper extends Application {
 			}
 
 		});
-		builder.setNegativeButton("我按错了",
+		builder.setNegativeButton("放弃",
 		new android.content.DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
