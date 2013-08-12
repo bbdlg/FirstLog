@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class LogListAdapter extends BaseAdapter {
     private Activity context;  
@@ -40,40 +42,48 @@ public class LogListAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
         LayoutInflater inflater = context.getLayoutInflater();  
         View itemView = inflater.inflate(R.layout.list_item, null);  
-/*        final UserData info = list.get(position);  
-        String sort = info.getSort();
-        TextView  dateAndTime 	= (TextView) itemView.findViewById(R.id.list_item_date_and_time);  
-        TextView  text 	= (TextView) itemView.findViewById(R.id.list_item_text);
-        ImageView imageView = (ImageView)itemView.findViewById(R.id.list_item_photo); 
-        
-        dateAndTime.setText(FirstLogHelper.getDateTimeByMillisecond(info.getTimesec()));
-        text.setVisibility(View.GONE);
-        imageView.setVisibility(View.GONE);
-        
-        if(sort.equals(UserData.TEXT)) {
-        	text.setVisibility(View.VISIBLE);
-        	text.setText(info.getContent()); 
+        UserData info = list.get(position);
+        TextView  tvYearAndMonth 	= (TextView) itemView.findViewById(R.id.year_month);
+        TextView  tvDay 	= (TextView) itemView.findViewById(R.id.day);
+        TextView  tvTime 	= (TextView) itemView.findViewById(R.id.time);
+        TextView  tvText 	= (TextView) itemView.findViewById(R.id.list_item_text);
+        ImageView ivLbs		= (ImageView)itemView.findViewById(R.id.lbs); 
+        TextView  tvLbsText = (TextView)itemView.findViewById(R.id.lbs_text);
+        ImageView ivPhoto	= (ImageView)itemView.findViewById(R.id.photo);
+        ImageView ivVideo	= (ImageView)itemView.findViewById(R.id.video); 
+        ImageView ivMark	= (ImageView)itemView.findViewById(R.id.mark); 
+                
+        tvYearAndMonth.setText(FirstLogHelper.getFormatValueByMillisecond(info.getTimesec(), "yyyy年MM月"));
+        tvDay.setText(FirstLogHelper.getFormatValueByMillisecond(info.getTimesec(), "dd"));
+        tvTime.setText(FirstLogHelper.getFormatValueByMillisecond(info.getTimesec(), "hh:mm:ss"));
+       
+        String text = info.getText();
+        if(null != text) {
+        	tvText.setText(text);
         }
-        else if(sort.equals(UserData.PHOTO)) {
-        	imageView.setVisibility(View.VISIBLE);
-        	//Bitmap bmpTmp = FirstLogHelper.getImageThumbnail((FirstLogHelper.localRootPath+"/"+info.getContent()), 200, 200); 
-        	//Log.i("LogListAdapter", "set bmp path:<"+FirstLogHelper.localRootPath+"/"+info.getContent()+">");
-        	//imageView.setImageBitmap(bmpTmp);
-        	imageView.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = new Intent();
-					Bundle bundle = new Bundle();
-    				bundle.putString("imagePath", FirstLogHelper.localRootPath+"/"+info.getContent());
-    				intent.putExtras(bundle);
-					intent.setClass(context, PreviewPhotoActivity.class);
-					context.startActivity(intent);
-				}
-			});
+        
+        String address = info.getAddress();
+        if(null != address) {
+        	tvLbsText.setText(address);
+        } else {
+        	tvLbsText.setVisibility(View.GONE);
         }
- */         
+        
+        String photo = info.getPhoto();
+        if(null == photo || photo.length() == 0) {
+        	ivPhoto.setVisibility(View.GONE);
+        }
+        
+        String video = info.getVideo();
+        if(null == video || video.length() == 0) {
+        	ivVideo.setVisibility(View.GONE);
+        }
+        
+        String mark = info.getMark();
+        if(null == mark || mark.length() == 0) {
+        	ivMark.setVisibility(View.GONE);
+        }
+      
         return itemView;  
 	}
 

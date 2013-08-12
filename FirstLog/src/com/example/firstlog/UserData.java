@@ -12,6 +12,7 @@ public class UserData {
 	public static final String VIDEO		= "video";
 	public static final String PHOTO		= "photo";
 	public static final String ISDELETE		= "isdelete";
+	public static final String ADDRESS		= "address";
 	
 	private String email;
 	private String timesec;
@@ -23,6 +24,7 @@ public class UserData {
 	private String video;
 	private String photo;
 	private String isdeleted;
+	private String address;
 	
     public static final int ENUM_TEXT  	= 1;
 	public static final int ENUM_PHOTO  = 2;
@@ -149,6 +151,18 @@ public class UserData {
 	 */
 	public void setIsdeleted(String isdeleted) {
 		this.isdeleted = isdeleted;
+	}
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	

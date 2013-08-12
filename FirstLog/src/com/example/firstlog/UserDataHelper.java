@@ -41,6 +41,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
     	values.put(UserData.VIDEO, data.getVideo());
     	values.put(UserData.PHOTO, data.getPhoto());
     	values.put(UserData.ISDELETE, data.getIsdeleted());
+    	values.put(UserData.ADDRESS, data.getAddress());
     	Long uid = dbUserData.insert(UserDataHelper.TABLE_NAME, UserData.ID, values);
     	Log.e("SaveUserData", uid+"");
     	return uid;
@@ -62,7 +63,8 @@ public class UserDataHelper extends SQLiteOpenHelper {
                 UserData.AUDIO+" varchar,"+
                 UserData.VIDEO+" varchar,"+
                 UserData.PHOTO+" varchar,"+
-                UserData.ISDELETE+" varchar"+
+                UserData.ISDELETE+" varchar,"+
+                UserData.ADDRESS+" varchar" +
                 ")"
                 );
 	}
@@ -111,6 +113,7 @@ public class UserDataHelper extends SQLiteOpenHelper {
             data.setVideo(cursor.getString(8));
             data.setPhoto(cursor.getString(9));
             data.setIsdeleted(cursor.getString(10));
+            data.setAddress(cursor.getString(11));
             dataList.add(data);
             cursor.moveToNext();
         }
