@@ -24,7 +24,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 
 public class LoginActivity extends Activity {
-	private static List<String> m = new ArrayList<String>();;
+	private List<String> m = new ArrayList<String>();;
 	private EditText view ;
 	private Spinner spinner;
 	private ArrayAdapter<String> adapter;
@@ -80,7 +80,6 @@ public class LoginActivity extends Activity {
         Bundle bundle = intent.getExtras();
         if((null != bundle) && (false == bundle.isEmpty())) {
         	String email = bundle.getString("email");
-            Log.i("haha", "get Email");
             EditText emailEditText = (EditText) findViewById(R.id.email_edittext);
             emailEditText.setText(email);
             //取得添加的值的位置
@@ -93,7 +92,12 @@ public class LoginActivity extends Activity {
             }
             position = adapter.getPosition(email);
             //将spinner定位到添加值的位置
-            spinner.setSelection(position);  
+            spinner.setSelection(position);
+            
+            //set current username
+            Editor statusPreferences = getSharedPreferences("firstlog", 0).edit();
+			statusPreferences.putString("username", email);
+			statusPreferences.commit();
         }
                 
         //register a new id

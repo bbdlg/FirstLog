@@ -34,6 +34,7 @@
         android:layout_margin="10dp"
         android:layout_weight="20"
         android:background="@drawable/setbar_bg"
+        android:padding="4dp"
         android:scrollbarStyle="insideOverlay" >
 
         <LinearLayout
@@ -88,6 +89,7 @@
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
             android:layout_marginTop="5dp"
+            android:background="@drawable/shape_time_bg"
             android:gravity="center"
             android:text=" 进行授权 " />
 

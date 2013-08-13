@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="25dp"
             android:layout_weight="1"
-            android:background="@color/green" />
+            android:background="@drawable/shape_time_bg" />
 
     </LinearLayout>
 
