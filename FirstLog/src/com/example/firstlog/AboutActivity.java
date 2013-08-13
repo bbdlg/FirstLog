@@ -23,7 +23,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 		init();// 执行初始化函数
-		loadurl(wv, "http://webapp.firstlog.net");
+		loadurl(wv, "http://m.firstlog.net");
 		handler = new Handler() {
 			public void handleMessage(Message msg) {// 定义一个Handler，用于处理下载线程与UI间通讯
 				if (!Thread.currentThread().isInterrupted()) {
@@ -73,6 +73,7 @@ public class AboutActivity extends Activity {
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
 //			ConfirmExit();// 按了返回键，但已经不能返回，则执行退出确认
+			AboutActivity.this.finish();// 关闭activity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
