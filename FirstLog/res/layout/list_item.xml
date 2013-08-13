@@ -41,81 +41,158 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
+
     <TextView
-        android:id="@+id/list_item_text"
+        android:id="@+id/standard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/cal"
-        android:layout_marginBottom="5dip"
-        android:layout_marginLeft="5dip"
-        android:layout_marginTop="5dip"
-        android:layout_toRightOf="@id/cal"
-        android:paddingBottom="10dip"
-        android:text="测试中文abcdefg123456"
-        android:textColor="@color/orange"
-        android:textIsSelectable="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:typeface="sans" />
-
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/cal"
+        android:text="TextView"
+        android:visibility="invisible" />
+    
     <RelativeLayout
-        android:id="@+id/icon_container"
+        android:id="@+id/text_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/list_item_text"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/list_item_text"
-        android:gravity="bottom|right" >
+        android:layout_alignLeft="@id/standard"
+        android:layout_below="@id/standard"
+        android:layout_toRightOf="@id/cal" >
 
         <TextView
-            android:id="@+id/nothing"
+            android:id="@+id/list_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="" />
-        
-        <ImageView
-            android:id="@+id/mark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/nothing"
-            android:src="@drawable/mark_no" />
-        
-        <ImageView
-            android:id="@+id/video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="6dp"
-            android:layout_toLeftOf="@+id/mark"
-            android:src="@drawable/video_no"/>
-        
+            android:paddingBottom="10dip"
+            android:text="测试中文abcdefg123456"
+            android:textColor="@color/orange"
+            android:textIsSelectable="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/photo_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/text_container"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/text_container"
+        android:layout_marginBottom="2dp"
+        android:layout_toRightOf="@id/cal"
+        android:gravity="bottom|left" >
+
         <ImageView
             android:id="@+id/photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/text_container"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="6dp"
-            android:layout_toLeftOf="@id/video"
+            android:layout_below="@id/text_container"
+            android:layout_marginRight="3dp"
             android:src="@drawable/photo_no" />
 
-        <TextView
-            android:id="@+id/lbs_text"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/photo"
+            android:layout_toRightOf="@id/photo"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/photo_thumb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/video_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/photo_container"
+        android:layout_below="@id/photo_container"
+        android:layout_marginBottom="2dp"
+        android:gravity="bottom|left" >
+
+        <ImageView
+            android:id="@+id/video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_marginRight="3dp"
-            android:layout_toLeftOf="@id/photo"
-            android:text="请联网..."
+            android:src="@drawable/video_no" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/video"
+            android:layout_toRightOf="@id/video"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/video_thumb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/video_thumb" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mark_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/photo_container"
+        android:layout_below="@id/video_container"
+        android:layout_marginBottom="2dp"
+        android:gravity="bottom|left" >
+
+        <ImageView
+            android:id="@+id/mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/mark_no" />
+
+        <TextView
+            android:id="@+id/mark_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/mark"
+            android:layout_marginRight="3dp"
+            android:layout_toRightOf="@id/mark"
+            android:text="标签1"
             android:textColor="@color/whitesmoke" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lbs_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/photo_container"
+        android:layout_below="@id/mark_container"
+        android:gravity="bottom|left" >
 
         <ImageView
             android:id="@+id/lbs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="3dp"
-            android:layout_toLeftOf="@id/lbs_text"
             android:src="@drawable/lbs_no" />
+
+        <TextView
+            android:id="@+id/lbs_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:layout_alignTop="@id/lbs"
+            android:layout_marginRight="3dp"
+            android:layout_toRightOf="@id/lbs"
+            android:text="请联网..."
+            android:textColor="@color/whitesmoke" />
 
     </RelativeLayout>
 

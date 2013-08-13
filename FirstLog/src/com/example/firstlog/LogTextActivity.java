@@ -192,29 +192,38 @@ public class LogTextActivity extends Activity {
 				if (!savePath.exists()) {
 					savePath.mkdirs();
 				}
-		        //proc lbs
+		        
+				//proc lbs
 		        data.setLongitude(""+getLocation().getLongitude());
 		        data.setLatitude(""+getLocation().getLatitude());
-				//proc text
+				
+		        //proc text
 		        data.setText(text.getText().toString());
-				//proc video
+				
+		        //proc video
 				if(null != fileVideo) {
-					String videoName = curtime+".mp4";
-					newfile= new File(saveDir+"/"+yearAndMonth, curtime+".mp4");
+					String newVideoName = saveDir+"/"+yearAndMonth + "/" + curtime+".mp4";
+					newfile= new File(newVideoName);
 					fileVideo.renameTo(newfile);
 					fileVideo.delete();
-			        data.setVideo(videoName);
+			        data.setVideo(newVideoName);
 				}
+				
 				//proc photo
 				if(null != filePhoto) {
-					String photoName = curtime+".jpg";
-					newfile= new File(saveDir+"/"+yearAndMonth, curtime+".jpg");
+					String newFileName = saveDir+"/"+yearAndMonth+"/"+curtime+".jpg";
+					newfile= new File(newFileName);
 					filePhoto.renameTo(newfile);
 					filePhoto.delete();
-			        data.setPhoto(photoName);
+			        data.setPhoto(newFileName);
 				}
+				
 				//proc mark
 				data.setMark(markStr);
+				
+				//proc address
+				data.setAddress(getLocation().getAddrStr());
+				
 				//save data
 				userDataHelper.saveUserData(data);
 

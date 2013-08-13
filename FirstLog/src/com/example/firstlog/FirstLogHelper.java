@@ -12,17 +12,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.AlertDialog.Builder;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Process;
 import android.os.Vibrator;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -295,4 +300,7 @@ public class FirstLogHelper extends Application {
 		option.disableCache(true);
 		mLocationClient.setLocOption(option);
 	}
+
+
+
 }
