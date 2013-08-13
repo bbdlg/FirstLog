@@ -17,15 +17,24 @@
             android:id="@+id/imageButton_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
             android:layout_weight="1"
+            android:background="@drawable/shape_time_bg"
+            android:padding="5dp"
             android:src="@drawable/delete" />
 
         <ImageButton
             android:id="@+id/imageButton_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
+            android:background="@drawable/shape_time_bg"
+            android:padding="5dp"
             android:src="@drawable/save" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -38,12 +47,16 @@
             android:layout_height="160dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/setbar_bg"
             android:ems="10"
             android:fitsSystemWindows="true"
             android:gravity="center_vertical|top"
+            android:hint="写点什么呗..."
             android:inputType="textMultiLine"
+            android:padding="6dp"
             android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="vertical" >
+            android:scrollbars="vertical"
+            android:textColor="@color/white" >
 
             <requestFocus />
         </EditText>

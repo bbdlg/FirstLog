@@ -202,8 +202,9 @@ public class LogTextActivity extends Activity {
 				
 		        //proc video
 				if(null != fileVideo) {
-					String newVideoName = saveDir+"/"+yearAndMonth + "/" + curtime+".mp4";
-					newfile= new File(newVideoName);
+					String newVideoName = "/"+yearAndMonth + "/" + curtime+".mp4";
+					String fullVideoName = saveDir + newVideoName;
+					newfile= new File(fullVideoName);
 					fileVideo.renameTo(newfile);
 					fileVideo.delete();
 			        data.setVideo(newVideoName);
@@ -211,8 +212,9 @@ public class LogTextActivity extends Activity {
 				
 				//proc photo
 				if(null != filePhoto) {
-					String newFileName = saveDir+"/"+yearAndMonth+"/"+curtime+".jpg";
-					newfile= new File(newFileName);
+					String newFileName = "/"+yearAndMonth+"/"+curtime+".jpg";
+					String fullFileName = saveDir + newFileName;
+					newfile= new File(fullFileName);
 					filePhoto.renameTo(newfile);
 					filePhoto.delete();
 			        data.setPhoto(newFileName);
@@ -241,6 +243,13 @@ public class LogTextActivity extends Activity {
 				// TODO Auto-generated method stub
 				EditText contentEditText = (EditText)findViewById(R.id.editText_content);
 				contentEditText.setText("");
+				resetLbsIcon();
+				resetMarkIcon();
+				resetPhotoIcon();
+				resetVideoIcon();
+				filePhoto = null;
+				fileVideo = null;
+				markStr = "";
 			}
 		});
 	}
@@ -300,6 +309,26 @@ public class LogTextActivity extends Activity {
 	
 	private void changeMarkIcon() {
     	Drawable drawable = getResources().getDrawable(R.drawable.mark_yes);
+    	mark.setImageDrawable(drawable);
+	}
+	
+	private void resetLbsIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.lbs_no);
+    	lbs.setImageDrawable(drawable);
+	}
+	
+	private void resetVideoIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.video_no);
+    	video.setImageDrawable(drawable);
+	}
+
+	private void resetPhotoIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.photo_no);
+    	photo.setImageDrawable(drawable);
+	}
+	
+	private void resetMarkIcon() {
+    	Drawable drawable = getResources().getDrawable(R.drawable.mark_no);
     	mark.setImageDrawable(drawable);
 	}
 }

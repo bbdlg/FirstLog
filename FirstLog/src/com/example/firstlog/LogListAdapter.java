@@ -87,13 +87,13 @@ public class LogListAdapter extends BaseAdapter {
         if(null == photo || photo.length() == 0) {
         	rlPhoto.setVisibility(View.GONE);
         } else {
-        	ivPhoto.setImageBitmap(FirstLogHelper.getImageThumbnail(photo, 200, 200));
+        	ivPhoto.setImageBitmap(FirstLogHelper.getImageThumbnail(FirstLogHelper.localRootPath + photo, 200, 200));
         	ivPhoto.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent intent = UntilOpenFile.openFile(photo);
+					Intent intent = UntilOpenFile.openFile(FirstLogHelper.localRootPath + photo);
 					context.startActivity(intent);
 				}
 			});
@@ -108,7 +108,7 @@ public class LogListAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent intent = UntilOpenFile.openFile(video);
+					Intent intent = UntilOpenFile.openFile(FirstLogHelper.localRootPath + video);
 					context.startActivity(intent);
 				}
 			});
