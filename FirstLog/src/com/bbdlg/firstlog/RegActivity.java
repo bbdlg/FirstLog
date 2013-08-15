@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import com.baidu.oauth.BaiduOAuth;
 import com.baidu.oauth.BaiduOAuth.BaiduOAuthResponse;
@@ -37,7 +37,7 @@ public class RegActivity extends Activity {
             BaiduOAuthoauthClient.startOAuth(RegActivity.this, mbApiKey, new String[]{"basic", "netdisk"},new BaiduOAuth.OAuthListener() {
                     @Override
                     public void onException(String msg) {
-                        Toast.makeText(getApplicationContext(), "授权失败 " + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "授权失败，原因： " + msg + "\n请检查网络是否正常:)", Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onComplete(BaiduOAuthResponse response) {

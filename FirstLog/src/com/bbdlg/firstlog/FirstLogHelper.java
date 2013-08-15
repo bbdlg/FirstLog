@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

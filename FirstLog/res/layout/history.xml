@@ -7,10 +7,10 @@
     <!--
     The PullToRefreshListView replaces a standard ListView widget.
     -->
-    <com.example.firstlog.PullToRefreshListView
+    <com.bbdlg.firstlog.PullToRefreshListView
         android:id="@+id/usalist"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         >
-        </com.example.firstlog.PullToRefreshListView>
+        </com.bbdlg.firstlog.PullToRefreshListView>
 </LinearLayout>

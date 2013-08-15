@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 public class UserDataRemote {
 	public static final String TIMESEC		= "timesec";

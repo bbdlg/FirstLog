@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.firstlog"
+    package="com.bbdlg.firstlog"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -27,13 +27,13 @@
     <uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
     
     <application
-        android:name="com.example.firstlog.FirstLogHelper"
+        android:name="com.bbdlg.firstlog.FirstLogHelper"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.firstlog.MainActivity"
+            android:name="com.bbdlg.firstlog.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,18 +43,18 @@
         </activity>
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
     	</service>
-        <activity android:name="com.example.firstlog.LoginActivity"></activity>
-        <activity android:name="com.example.firstlog.RegActivity"></activity>
-        <activity android:name="com.example.firstlog.GuideActivity"></activity>
-        <activity android:name="com.example.firstlog.LogTextActivity"
+        <activity android:name="com.bbdlg.firstlog.LoginActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.RegActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.GuideActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.LogTextActivity"
             	  android:windowSoftInputMode="adjustPan"
             	  android:configChanges="orientation|keyboardHidden"
             ></activity>
-        <activity android:name="com.example.firstlog.LogPhotoActivity"></activity>
-        <activity android:name="com.example.firstlog.ShowLogActivity"></activity>
-        <activity android:name="com.example.firstlog.PreviewPhotoActivity"></activity>
-        <activity android:name="com.example.firstlog.AddMarkActivity"></activity>
-        <activity android:name="com.example.firstlog.AboutActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.LogPhotoActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.ShowLogActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.PreviewPhotoActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.AddMarkActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.AboutActivity"></activity>
     </application>
 
 

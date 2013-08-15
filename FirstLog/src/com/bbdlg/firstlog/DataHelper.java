@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.util.ArrayList;
 import java.util.List;

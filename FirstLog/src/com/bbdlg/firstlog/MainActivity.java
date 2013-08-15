@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import android.os.Bundle;
 import android.app.Activity;

@@ -1,13 +1,27 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.MKGeneralListener;
+import com.baidu.mapapi.map.MKEvent;
+import com.baidu.mapapi.search.MKAddrInfo;
+import com.baidu.mapapi.search.MKBusLineResult;
+import com.baidu.mapapi.search.MKDrivingRouteResult;
+import com.baidu.mapapi.search.MKPoiResult;
+import com.baidu.mapapi.search.MKSearch;
+import com.baidu.mapapi.search.MKSearchListener;
+import com.baidu.mapapi.search.MKShareUrlResult;
+import com.baidu.mapapi.search.MKSuggestionResult;
+import com.baidu.mapapi.search.MKTransitRouteResult;
+import com.baidu.mapapi.search.MKWalkingRouteResult;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -30,6 +44,12 @@ import android.widget.Toast;
 
 public class GuideActivity extends Activity {
 	
+	//搜索相关
+    BMapManager mBMapManager = null;
+    public static final String strKey = "BFbb356bfd081e156a52067ce5e504e6";
+	public static MKSearch mSearch = null;	// 搜索模块，也可去掉地图模块独立使用
+	
+	private long exitTime = 0;
 	private String saveDir = FirstLogHelper.localRootPath;
 	public static boolean startRecordAudio = false;
 	
@@ -231,21 +251,83 @@ public class GuideActivity extends Activity {
                 menuDialog.hide();
             }
         });
-	}
+        
+		// 初始化搜索模块，注册事件监听
+		initEngineManager(this);
+        mSearch = new MKSearch();
+        mSearch.init(mBMapManager, new MKSearchListener() {
+            @Override
+            public void onGetPoiDetailSearchResult(int type, int error) {
+            }
+            
+			public void onGetAddrResult(MKAddrInfo res, int error) {
+				//wait to debug
+//				Toast.makeText(getApplicationContext(), "onGetAddrResult return: " + res.strAddr, Toast.LENGTH_LONG).show();
+				UserDataHelper userDataHelper = new UserDataHelper(GuideActivity.this);
+//				userDataHelper.updateAddrByPoi(res.strAddr, ""+(float)(res.geoPt.getLatitudeE6())/1e6, ""+(float)(res.geoPt.getLongitudeE6())/1e6);
+				userDataHelper.updateAddrByPoi(res.strAddr, StatusUpdateAddr.getLatitude(), StatusUpdateAddr.getLongitude());
+				StatusUpdateAddr.setStatusUpdate(true);
+			}
+			public void onGetPoiResult(MKPoiResult res, int type, int error) {
+				//wait to debug
+				Log.d("debug", "onGetPoiResult return: " + res);
+			}
+			public void onGetDrivingRouteResult(MKDrivingRouteResult res, int error) {
+			}
+			public void onGetTransitRouteResult(MKTransitRouteResult res, int error) {
+			}
+			public void onGetWalkingRouteResult(MKWalkingRouteResult res, int error) {
+			}
+			public void onGetBusDetailResult(MKBusLineResult result, int iError) {
+			}
+			@Override
+			public void onGetSuggestionResult(MKSuggestionResult res, int arg1) {
+			}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			//((FirstLogHelper)getApplication()).dialogConfirm(GuideActivity.this, "您一定要抛弃我么:(");
-			MessageBox msgBox =  new MessageBox(this);
-	        int ret = msgBox.showDialog("确定要退出么？如果正在上传或下载数据，建议您稍候再退出 :)", "注意");
-	    	if(1 == ret) {
-	    		android.os.Process.killProcess(android.os.Process.myPid());
-	    	}
-			return true;
-		}
-		return false;
+			@Override
+			public void onGetShareUrlResult(MKShareUrlResult result, int type,
+					int error) {
+				// TODO Auto-generated method stub
+				
+			}
+
+        });
+        
 	}
+	
+	public void initEngineManager(Context context) {
+        if (mBMapManager == null) {
+            mBMapManager = new BMapManager(context);
+        }
+
+        if (!mBMapManager.init(strKey,new MyGeneralListener())) {
+            Toast.makeText(GuideActivity.this, 
+                    "BMapManager  初始化错误!", Toast.LENGTH_LONG).show();
+        }
+	}
+	
+	// 常用事件监听，用来处理通常的网络错误，授权验证错误等
+    static class MyGeneralListener implements MKGeneralListener {
+        
+        @Override
+        public void onGetNetworkState(int iError) {
+            if (iError == MKEvent.ERROR_NETWORK_CONNECT) {
+                Log.d("debug", "您的网络出错啦！");
+            }
+            else if (iError == MKEvent.ERROR_NETWORK_DATA) {
+                Log.d("debug", "输入正确的检索条件！");
+            }
+        }
+        @Override
+        public void onGetPermissionState(int iError) {
+            if (iError ==  MKEvent.ERROR_PERMISSION_DENIED) {
+                //授权Key错误：
+                Log.d("debug", "请在 DemoApplication.java文件输入正确的授权Key！");
+//                DemoApplication.getInstance().m_bKeyRight = false;
+            }
+        }
+    }
+
 	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -363,5 +445,19 @@ public class GuideActivity extends Activity {
 
 	}
 	
-	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){   
+	        if((System.currentTimeMillis()-exitTime) > 2000){  
+	            Toast.makeText(getApplicationContext(), "再按一次退出程序~\n如果正在上传或下载数据，建议您稍候再退出 :)", Toast.LENGTH_SHORT).show();                                
+	            exitTime = System.currentTimeMillis();   
+	        } else {
+//	            finish();
+	            android.os.Process.killProcess(android.os.Process.myPid());
+	            //System.exit(0);
+	        }
+	        return true;   
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
 }

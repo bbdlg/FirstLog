@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

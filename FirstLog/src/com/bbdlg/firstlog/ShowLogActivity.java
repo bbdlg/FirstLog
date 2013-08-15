@@ -1,14 +1,34 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.MKGeneralListener;
+import com.baidu.mapapi.map.ItemizedOverlay;
+import com.baidu.mapapi.map.MKEvent;
+import com.baidu.mapapi.map.OverlayItem;
+import com.baidu.mapapi.search.MKAddrInfo;
+import com.baidu.mapapi.search.MKBusLineResult;
+import com.baidu.mapapi.search.MKDrivingRouteResult;
+import com.baidu.mapapi.search.MKPoiResult;
+import com.baidu.mapapi.search.MKSearch;
+import com.baidu.mapapi.search.MKSearchListener;
+import com.baidu.mapapi.search.MKShareUrlResult;
+import com.baidu.mapapi.search.MKSuggestionResult;
+import com.baidu.mapapi.search.MKTransitRouteResult;
+import com.baidu.mapapi.search.MKWalkingRouteResult;
+
 import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
+import android.widget.Toast;
 
 public class ShowLogActivity extends Activity implements IXListViewListener {
 	private XListView mListView;
@@ -17,6 +37,8 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 	private Handler mHandler;
 	private int searchLogOffset = 0;
 	private static int searchLogStep = 5;
+	
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +54,9 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 		mListView.setPullRefreshEnable(false);	//up
 		mListView.setXListViewListener(this);
 		mHandler = new Handler();
+		
 	}
+	
 
 	private void geneItems() {
     	UserDataHelper userDataHelper = new UserDataHelper(ShowLogActivity.this);

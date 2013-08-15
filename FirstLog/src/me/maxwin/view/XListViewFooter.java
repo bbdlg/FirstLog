@@ -6,7 +6,7 @@
  */
 package me.maxwin.view;
 
-import com.example.firstlog.R;
+import com.bbdlg.firstlog.R;
 
 import android.content.Context;
 import android.util.AttributeSet;

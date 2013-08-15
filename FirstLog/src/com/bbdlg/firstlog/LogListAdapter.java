@@ -1,7 +1,9 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.io.File;
 import java.util.List;
+
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -49,7 +51,7 @@ public class LogListAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
         LayoutInflater inflater = context.getLayoutInflater();  
         View itemView = inflater.inflate(R.layout.list_item, null);  
-        UserData info = list.get(position);
+        final UserData info = list.get(position);
         TextView  tvYearAndMonth 	= (TextView) itemView.findViewById(R.id.year_month);
         TextView  tvDay 	= (TextView) itemView.findViewById(R.id.day);
         TextView  tvTime 	= (TextView) itemView.findViewById(R.id.time);
@@ -76,9 +78,31 @@ public class LogListAdapter extends BaseAdapter {
         	tvText.setText(text);
         }
         
+
+        OnClickListener clickToGetAddr = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+		    	if(StatusUpdateAddr.isValidUpdate() == true) {
+		        	//start search addr of latitude and longitude
+		        	GeoPoint ptCenter = new GeoPoint((int)(Float.valueOf(info.getLatitude())*1e6), (int)(Float.valueOf(info.getLongitude())*1e6));
+					//反Geo搜索
+		        	GuideActivity.mSearch.reverseGeocode(ptCenter);
+		        	
+		        	StatusUpdateAddr.setPosition(info.getLatitude(), info.getLongitude());
+		        	StatusUpdateAddr.setStatusUpdate(false);
+		        	((TextView)v).setText("重进本页面即可刷新地址");
+		    	}
+			}
+		};
+        
         String address = info.getAddress();
         if(null == address || address.length() == 0) {
-        	rlLbs.setVisibility(View.GONE);
+//        	rlLbs.setVisibility(View.GONE);
+        	tvLbsText.setText("试着轻轻的点我一下");
+        	tvLbsText.setOnClickListener(clickToGetAddr);
+        	
         } else {
         	tvLbsText.setText(address);
         }

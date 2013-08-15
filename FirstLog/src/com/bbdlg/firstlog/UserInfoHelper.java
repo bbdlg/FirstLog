@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +129,16 @@ public class UserDataHelper extends SQLiteOpenHelper {
         int id = dbUserData.delete(UserDataHelper.TABLE_NAME, UserData.USERNAME +"=\""+username+"\"", null);
         Log.e("DelUserInfo","delete username<"+username+"> databases, ret = "+id+"");
         return id;
+    }
+    
+    //update address of record by latitude and longitude
+    public boolean updateAddrByPoi(String addr, String latitude, String longitude) {
+    	ContentValues cv = new ContentValues();
+    	cv.put(UserData.ADDRESS, addr);
+    	dbUserData.update(UserDataHelper.TABLE_NAME, cv, 
+    			UserData.LATITUDE+"=? and "+UserData.LONGITUDE+"=?", 
+    			new String[]{latitude, longitude});
+    	return true;
     }
 
 }

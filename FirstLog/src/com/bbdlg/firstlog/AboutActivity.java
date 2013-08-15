@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 import android.app.Activity;
 import android.app.AlertDialog;

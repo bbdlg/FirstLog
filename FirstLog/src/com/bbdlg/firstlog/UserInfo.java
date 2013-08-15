@@ -1,4 +1,4 @@
-package com.example.firstlog;
+package com.bbdlg.firstlog;
 
 public class UserInfo {
 	public static final String ID="id";
