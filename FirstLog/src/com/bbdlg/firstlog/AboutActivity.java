@@ -13,6 +13,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class AboutActivity extends Activity {
+	
+	public final static String urlAbout = "http://m.firstlog.net/about_firstlog";
+	
 	/** Called when the activity is first created. */
 	WebView wv;
 	ProgressDialog pd;
@@ -23,7 +26,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 		init();// 执行初始化函数
-		loadurl(wv, "http://m.firstlog.net");
+		loadurl(wv, urlAbout);
 		handler = new Handler() {
 			public void handleMessage(Message msg) {// 定义一个Handler，用于处理下载线程与UI间通讯
 				if (!Thread.currentThread().isInterrupted()) {
