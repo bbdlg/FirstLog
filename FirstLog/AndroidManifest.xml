@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bbdlg.firstlog"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="@string/version" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -54,7 +54,7 @@
         <activity android:name="com.bbdlg.firstlog.ShowLogActivity"></activity>
         <activity android:name="com.bbdlg.firstlog.PreviewPhotoActivity"></activity>
         <activity android:name="com.bbdlg.firstlog.AddMarkActivity"></activity>
-        <activity android:name="com.bbdlg.firstlog.AboutActivity"></activity>
+        <activity android:name="com.bbdlg.firstlog.AboutActivity" android:theme="@style/Transparent"></activity>
     </application>
 
 

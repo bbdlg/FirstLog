@@ -2,6 +2,10 @@
 <resources>
 
     <string name="app_name">FirstLog</string>
+    <string name="version">1.00_20130829</string>
+    <string name="about_contract">
+        欢迎使用FirstLog记录您的生活，请点击以下网址获取更多信息：</string>
+    <string name="about_url">http://www.firstlog.net</string>
     <string name="action_settings">Settings</string>
     <string name="password_default">default</string>
     <!--string name="hello_world">Hello world!</string-->
