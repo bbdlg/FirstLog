@@ -62,7 +62,7 @@ public class GuideActivity extends Activity {
     };
     /** 菜单文字 **/
     String[] menu_name_array = { 
-    		"上传数据", "下载数据", "切换账号","关于"
+    		"备份数据", "恢复数据", "切换账号","关于"
     };
     /** 宏定义 **/
     private final static int MENU_UPLOAD = 0;
@@ -129,6 +129,11 @@ public class GuideActivity extends Activity {
         menuGrid.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
+
+                SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
+                String curuser = statusPreferences.getString("username", "noSuchEmailUser");
+                String token = statusPreferences.getString("token_of_"+curuser, "no_token");
+                
                 switch (arg2) {
                 case MENU_CHANGEUSER:
                 	Editor status = getSharedPreferences("firstlog", 0).edit();
@@ -151,16 +156,18 @@ public class GuideActivity extends Activity {
                 	break;
                 	
                 case MENU_UPLOAD:
-
+                	
+                	if(FileSyncHelper.isSyncing == true || TableSyncHelper.isSyncing == true) {
+                		Toast.makeText(GuideActivity.this, "正在备份数据，稍安勿躁~", Toast.LENGTH_LONG).show();
+                		break;
+                	}
+                	
                 	MessageBox msgBox =  new MessageBox(GuideActivity.this);
-        	        int ret = msgBox.showDialog("上传数据可能产生较大流量，建议在wifi网络下进行。", "温馨提示");
+        	        int ret = msgBox.showDialog("备份数据可能产生较大流量，建议在wifi网络下进行。", "温馨提示");
         	    	if(0 == ret) {
         	    		break;
         	    	}
         	    	
-                    SharedPreferences statusPreferences = getSharedPreferences("firstlog", 0);
-                    String curuser = statusPreferences.getString("username", "noSuchEmailUser");
-                    String token = statusPreferences.getString("token_of_"+curuser, "no_token");
         			if(token.equals("no_token")) {
         				Log.e("sync", "token has not found");
         				Toast.makeText(getApplicationContext(), "当前账户未授权，不妨换个账号登录试试~", Toast.LENGTH_LONG).show();
@@ -169,24 +176,30 @@ public class GuideActivity extends Activity {
         				FirstLogHelper.token = token;
         				
         				Log.w("sync", "start sync ...");
-        				Toast.makeText(getApplicationContext(), "开始上传本地文件到云端，并同步logs...", Toast.LENGTH_LONG).show();
+        				Toast.makeText(getApplicationContext(), "开始备份本地数据到云端...", Toast.LENGTH_LONG).show();
         				
         				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
         				fileSyncHelper.syncFiles("upload");
         				
         				TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this, curuser);
-        				tableSyncHelper.syncTables();
+        				tableSyncHelper.syncTables("upload");
         				
         				//Log.w("sync", "finish sync!");
-        				//Toast.makeText(this, "恭喜恭喜！本地文件上传完成，logs同步完成~", Toast.LENGTH_LONG).show();
+        				//Toast.makeText(this, "恭喜恭喜！本地文件备份完成，logs同步完成~", Toast.LENGTH_LONG).show();
         			}
                       	
                 	break;
                 	
                 case MENU_DOWNLOAD:
+                	
+                	if(FileSyncHelper.isSyncing == true || TableSyncHelper.isSyncing == true) {
+                		Toast.makeText(GuideActivity.this, "正在恢复数据，稍安勿躁~", Toast.LENGTH_LONG).show();
+                		break;
+                	}
+                	
                 	//((FirstLogHelper)getApplication()).dialogConfirm(GuideActivity.this, "本操作将下载云端所有的照片、视频、语音等，可能占用大量空间，请慎重:)");
         	        MessageBox msgBox1 =  new MessageBox(GuideActivity.this);
-        	        int ret1 = msgBox1.showDialog("下载数据可能产生较大流量，建议在wifi网络下进行。同时如果您使用了较长时间的firstlog，本操作还可能会占用您本地SD卡的较大空间，请慎重", "温馨提示");
+        	        int ret1 = msgBox1.showDialog("恢复数据可能产生较大流量，建议在wifi网络下进行。同时如果您使用了较长时间的firstlog，本操作还可能会占用您本地SD卡的较大空间，请慎重", "温馨提示");
                 	if(0 == ret1) {
                 		break;
                 	}
@@ -202,13 +215,16 @@ public class GuideActivity extends Activity {
         				FirstLogHelper.token = token1;
         				
         				Log.w("sync", "start sync ...");
-        				Toast.makeText(getApplicationContext(), "开始从云端下载文件...", Toast.LENGTH_LONG).show();
+        				Toast.makeText(getApplicationContext(), "开始从云端恢复数据...", Toast.LENGTH_LONG).show();
         				
         				FileSyncHelper fileSyncHelper = new FileSyncHelper(GuideActivity.this);
         				fileSyncHelper.syncFiles("download");
+
+        				TableSyncHelper tableSyncHelper = new TableSyncHelper(GuideActivity.this, curuser);
+        				tableSyncHelper.syncTables("download");
         				
         				//Log.w("sync", "finish sync!");
-        				//Toast.makeText(this, "恭喜恭喜！云端的所有文件均已下载到本地~", Toast.LENGTH_LONG).show();
+        				//Toast.makeText(this, "恭喜恭喜！云端的所有文件均已恢复到本地~", Toast.LENGTH_LONG).show();
         			}
         			
                 	break;

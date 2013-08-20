@@ -184,7 +184,7 @@ public class TableSyncHelper {
 		}
 	}
 	
-	public void syncTables() {
+	public void syncTables(final String flag) {
     	if(null != FirstLogHelper.token){
     		if(true == isSyncing) {
     			Toast.makeText(context, "正在同步数据库ing，稍安勿躁~", Toast.LENGTH_LONG).show();
@@ -213,6 +213,7 @@ public class TableSyncHelper {
 							}
 						}
 						
+						//上传和下载前均需上传本地log
 						//delete local database where deleted flag is setted ...
 						//delete same record in remote database ...
 						
@@ -220,13 +221,19 @@ public class TableSyncHelper {
 						insertRecords();
 						Log.i("sync tables", "have pushed local records to cloud pan");
 						
-						//drop local database
-						new UserDataHelper(context).delUserData(email);
-						
-						//download remote database
-						downloadRecords();
-						Log.i("sync tables", "have download records on cloud pan to local database");
-						
+						if(flag.equals("download")) {
+							//drop local database
+							new UserDataHelper(context).delUserData(email);
+							
+							//download remote database
+							downloadRecords();
+							Log.i("sync tables", "have download records on cloud pan to local database");
+						} else if(flag.equals("upload")) {
+							//do nothing
+							
+						} else {
+							Log.i("sync tables", "unknown flag: "+flag);
+						}
 					}catch (Exception e_io) {
 						// TODO: handle exception
 						e_io.printStackTrace();

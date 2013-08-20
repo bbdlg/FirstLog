@@ -151,23 +151,24 @@ public class FileSyncHelper {
 				FirstLogHelper.uiThreadHandler.post(new Runnable(){
 					
 	    			public void run(){
-	  
 	    				if(downloadResponse.errorCode == 0){
-	    					
-	    					Toast.makeText(context,"下载成功", Toast.LENGTH_SHORT).show();
-	    					
+//	    					Toast.makeText(context,"下载成功", Toast.LENGTH_SHORT).show();
 	    				}else{
-	    					
 	    					Toast.makeText(context,"下载失败，错误代码："+downloadResponse.errorCode+"，错误信息："+downloadResponse.message, Toast.LENGTH_SHORT).show(); 
 	    				}
-	    				
 	    			}
 	    		});	
 			}
 	    		
 			downloadFileList.remove(downloadFileList.size()-1);				
 		}
-
+		
+		FirstLogHelper.uiThreadHandler.post(new Runnable(){
+			
+			public void run(){
+				Toast.makeText(context,"成功恢复云端文件至本地", Toast.LENGTH_SHORT).show();
+			}
+		});
 		
 		return false;
 	
@@ -188,7 +189,7 @@ public class FileSyncHelper {
 				Log.e("upload", "from:"+FirstLogHelper.localRootPath+"/"+uploadFileList.get(uploadFileList.size()-1)
 				+" to"+FirstLogHelper.remoteRootPath+"/"+uploadFileList.get(uploadFileList.size()-1));
 
-	    	    //Use pcs uploadFile API to uplaod files
+	    	    //Use pcs uploadFile API to upload files
 				final BaiduPCSActionInfo.PCSFileInfoResponse uploadResponse = api.uploadFile(
 						FirstLogHelper.localRootPath+"/"+uploadFileList.get(uploadFileList.size()-1), 
 						FirstLogHelper.remoteRootPath+"/"+uploadFileList.get(uploadFileList.size()-1),
@@ -214,21 +215,23 @@ public class FileSyncHelper {
 	    			public void run(){
 	  
 	    				if(uploadResponse.status.errorCode == 0){
-	    					
-	    					Toast.makeText(context,"上传成功", Toast.LENGTH_SHORT).show();
-	    					
+//	    					Toast.makeText(context,"上传成功", Toast.LENGTH_SHORT).show();
 	    				}else{
-	    					
 	    					Toast.makeText(context,"上传失败，错误代码："+uploadResponse.status.errorCode+"，错误信息："+uploadResponse.status.message, Toast.LENGTH_SHORT).show(); 
 	    				}
-	    				
 	    			}
 	    		});	
 			}
 	    		
 			uploadFileList.remove(uploadFileList.size()-1);				
 		}
-
+		
+		FirstLogHelper.uiThreadHandler.post(new Runnable(){
+			
+			public void run(){
+				Toast.makeText(context,"成功备份本地文件至云端", Toast.LENGTH_SHORT).show();
+			}
+		});
 		
 		return false;
 	}
@@ -328,14 +331,17 @@ public class FileSyncHelper {
 					*/
 		    		
 		    		//start upload list
-					if(flag.equals("upload")) {
-						upload(uploadFileList);
-						Log.i("sync files", "have pushed local files to cloud pan");
-					} else if(flag.equals("download")) {
+					upload(uploadFileList);
+					Log.i("sync files", "have pushed local files to cloud pan");
+					
+					if(flag.equals("download")) {
 						download(downloadFileList);
 						Log.i("sync files", "have download fields on cloud pan to local database");
+					} else if(flag.equals("upload")) {
+						//do nothing
+						
 					} else {
-						Log.i("sync files", "unknown flag");
+						Log.i("sync tables", "unknown flag: "+flag);
 					}
 					
 					//finish upload list
