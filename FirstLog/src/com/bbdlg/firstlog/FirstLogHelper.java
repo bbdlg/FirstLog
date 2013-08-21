@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -301,6 +303,19 @@ public class FirstLogHelper extends Application {
 		mLocationClient.setLocOption(option);
 	}
 
-
+	public static boolean isApkDebugable(Context context,String packageName) {
+        try {
+            PackageInfo pkginfo = context.getPackageManager().getPackageInfo(
+                    packageName, 1);
+            if (pkginfo != null ) {
+                ApplicationInfo info= pkginfo.applicationInfo;
+                return (info.flags&ApplicationInfo.FLAG_DEBUGGABLE)!=0;
+            }
+            
+        } catch (Exception e) {
+            
+        }
+        return false;
+    }
 
 }

@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static final String activityTag = "mainActivity";
@@ -28,6 +29,11 @@ public class MainActivity extends Activity {
         final View view = View.inflate(this, R.layout.main, null);
 
         setContentView(view);
+        
+        //check current apk is debug or release
+        if(true == FirstLogHelper.isApkDebugable(MainActivity.this, getPackageName())) {
+        	Toast.makeText(MainActivity.this, "当前程序是debug版本", Toast.LENGTH_LONG).show();
+        }
         
 		//渐变展示启动屏
 		AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f);
