@@ -18,6 +18,7 @@ import com.baidu.mapapi.search.MKShareUrlResult;
 import com.baidu.mapapi.search.MKSuggestionResult;
 import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.baidu.mapapi.search.MKWalkingRouteResult;
+import com.baidu.mobstat.StatService;
 
 import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
@@ -104,6 +105,28 @@ public class ShowLogActivity extends Activity implements IXListViewListener {
 
 	public void setSearchLogOffset(int searchLogOffset) {
 		this.searchLogOffset = searchLogOffset;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		StatService.onPause(ShowLogActivity.this);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		StatService.onResume(ShowLogActivity.this);
 	}
 	
 }

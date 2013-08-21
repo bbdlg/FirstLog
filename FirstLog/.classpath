@@ -7,5 +7,10 @@
 	<classpathentry kind="lib" path="libs/Baidu-OAuth-SDK-Android-G-2.0.0.jar"/>
 	<classpathentry kind="lib" path="libs/Baidu-PCS-SDK-Android-L2-2.1.0.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="F:/adt-bundle-windows-x86-20130219/resource/android_3.2/android_api.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/F:/adt-bundle-windows-x86-20130219/resource/android_3.2/android_doc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

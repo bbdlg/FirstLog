@@ -3,6 +3,8 @@ package com.bbdlg.firstlog;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidu.mobstat.StatService;
+
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -160,5 +162,25 @@ public class LoginActivity extends Activity {
 		LoginActivity.this.finish();
 		//startActivityForResult(intent, 1);
     }
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		StatService.onPause(LoginActivity.this);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		StatService.onResume(LoginActivity.this);
+	}
 
 }

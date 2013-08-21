@@ -1,5 +1,6 @@
 package com.bbdlg.firstlog;
 
+import com.baidu.mobstat.StatService;
 import com.baidu.oauth.BaiduOAuth;
 import com.baidu.oauth.BaiduOAuth.BaiduOAuthResponse;
 import android.util.Log;
@@ -93,4 +94,24 @@ public class RegActivity extends Activity {
         });
 
     }
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		StatService.onPause(RegActivity.this);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		StatService.onResume(RegActivity.this);
+	}
 }

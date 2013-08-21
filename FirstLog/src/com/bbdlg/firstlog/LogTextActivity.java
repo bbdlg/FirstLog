@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import com.baidu.location.BDLocation;
+import com.baidu.mobstat.StatService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,12 +59,23 @@ public class LogTextActivity extends Activity {
         photo 	= (ImageView)findViewById(R.id.imageView_photo);
         mark 	= (ImageView)findViewById(R.id.imageView_mark);
         
+        //text
+        text.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "click_text", "start");				
+			}
+		});
+        
         //Location Based Service，LBS
         lbs.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "click_lbs", "start");
 				setLocation();
 				if(null != getLocation()) {
 					changeLbsIcon();
@@ -77,6 +90,7 @@ public class LogTextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "click_video", "start");
 
 				String state = Environment.getExternalStorageState();
 				if (state.equals(Environment.MEDIA_MOUNTED)) {
@@ -110,6 +124,7 @@ public class LogTextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "click_photo", "start");
 
 				String state = Environment.getExternalStorageState();
 				if (state.equals(Environment.MEDIA_MOUNTED)) {
@@ -144,6 +159,7 @@ public class LogTextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "click_mark", "start");
 				Intent intent = new Intent();
 				intent.setClass(LogTextActivity.this, AddMarkActivity.class);
 				startActivityForResult(intent, UserData.ENUM_MARK);	
@@ -157,6 +173,7 @@ public class LogTextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "save_log", "start");
 
 	        	lbs.performClick();
 		        if((text.getText().toString()).isEmpty()
@@ -241,6 +258,7 @@ public class LogTextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				StatService.onEvent(LogTextActivity.this, "rewrite_log", "start");
 				EditText contentEditText = (EditText)findViewById(R.id.editText_content);
 				contentEditText.setText("");
 				resetLbsIcon();
@@ -331,4 +349,25 @@ public class LogTextActivity extends Activity {
     	Drawable drawable = getResources().getDrawable(R.drawable.mark_no);
     	mark.setImageDrawable(drawable);
 	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		StatService.onPause(LogTextActivity.this);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		StatService.onResume(LogTextActivity.this);
+	}
+	
 }

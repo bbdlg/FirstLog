@@ -1,5 +1,7 @@
 package com.bbdlg.firstlog;
 
+import com.baidu.mobstat.StatService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +34,26 @@ public class AddMarkActivity extends Activity {
 			}
 		});
         
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		StatService.onPause(AddMarkActivity.this);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		StatService.onResume(AddMarkActivity.this);
 	}
 
 }

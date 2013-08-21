@@ -17,6 +17,8 @@ import com.baidu.mapapi.search.MKShareUrlResult;
 import com.baidu.mapapi.search.MKSuggestionResult;
 import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.baidu.mapapi.search.MKWalkingRouteResult;
+import com.baidu.mobstat.StatService;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -136,6 +138,8 @@ public class GuideActivity extends Activity {
                 
                 switch (arg2) {
                 case MENU_CHANGEUSER:
+                	StatService.onEvent(GuideActivity.this, "logout", "start");
+                	
                 	Editor status = getSharedPreferences("firstlog", 0).edit();
                 	status.putString("haveLogined", "no");
                 	status.commit();
@@ -161,6 +165,8 @@ public class GuideActivity extends Activity {
                 		Toast.makeText(GuideActivity.this, "正在备份数据，稍安勿躁~", Toast.LENGTH_LONG).show();
                 		break;
                 	}
+                	
+                	StatService.onEvent(GuideActivity.this, "backup", "network");
                 	
                 	MessageBox msgBox =  new MessageBox(GuideActivity.this);
         	        int ret = msgBox.showDialog("备份数据可能产生较大流量，建议在wifi网络下进行。", "温馨提示");
@@ -196,6 +202,8 @@ public class GuideActivity extends Activity {
                 		Toast.makeText(GuideActivity.this, "正在恢复数据，稍安勿躁~", Toast.LENGTH_LONG).show();
                 		break;
                 	}
+                	
+                	StatService.onEvent(GuideActivity.this, "recover", "network");
                 	
                 	//((FirstLogHelper)getApplication()).dialogConfirm(GuideActivity.this, "本操作将下载云端所有的照片、视频、语音等，可能占用大量空间，请慎重:)");
         	        MessageBox msgBox1 =  new MessageBox(GuideActivity.this);
@@ -370,5 +378,25 @@ public class GuideActivity extends Activity {
 	        return true;   
 	    }
 	    return super.onKeyDown(keyCode, event);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		StatService.onPause(GuideActivity.this);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		StatService.onResume(GuideActivity.this);
 	}
 }
