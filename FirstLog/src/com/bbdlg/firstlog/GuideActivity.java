@@ -367,8 +367,12 @@ public class GuideActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){   
-	        if((System.currentTimeMillis()-exitTime) > 2000){  
-	            Toast.makeText(getApplicationContext(), "再按一次退出程序~", Toast.LENGTH_SHORT).show();                                
+	        if((System.currentTimeMillis()-exitTime) > 2000){
+	        	String tip = "再按一次退出程序~";
+	        	if(FileSyncHelper.isSyncing == true || TableSyncHelper.isSyncing == true) {
+                	tip = "正在与云端同步数据，建议您稍后退出。再按一次将强制退出程序~";
+	        	};
+	            Toast.makeText(getApplicationContext(), tip, Toast.LENGTH_SHORT).show();                                
 	            exitTime = System.currentTimeMillis();   
 	        } else {
 //	            finish();

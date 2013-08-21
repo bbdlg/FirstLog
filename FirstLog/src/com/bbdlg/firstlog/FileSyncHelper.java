@@ -217,7 +217,7 @@ public class FileSyncHelper {
 	    				if(uploadResponse.status.errorCode == 0){
 //	    					Toast.makeText(context,"上传成功", Toast.LENGTH_SHORT).show();
 	    				}else{
-	    					Toast.makeText(context,"上传失败，错误代码："+uploadResponse.status.errorCode+"，错误信息："+uploadResponse.status.message, Toast.LENGTH_SHORT).show(); 
+//	    					Toast.makeText(context,"上传失败，错误代码："+uploadResponse.status.errorCode+"，错误信息："+uploadResponse.status.message, Toast.LENGTH_SHORT).show(); 
 	    				}
 	    			}
 	    		});	
