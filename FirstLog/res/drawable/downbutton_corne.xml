@@ -3,8 +3,8 @@
 
     <gradient
         android:angle="90"
-        android:endColor="#c0000000"
-        android:startColor="#c0000000" />
+        android:endColor="@color/darkblue"
+        android:startColor="@color/darkblue" />
  <!-- 背景颜色渐变 -->
     <stroke
         android:dashGap="2dp"
